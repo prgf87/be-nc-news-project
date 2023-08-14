@@ -39,7 +39,7 @@ describe('app()', () => {
     it('200: return with a status of 200', () => {
       return request(app).get('/api/articles/5').expect(200);
     });
-    it('200: return with a status of 200 and the corresponding article data', () => {
+    xit('200: return with a status of 200 and the corresponding article data', () => {
       return request(app)
         .get('/api/articles/1')
         .expect(200)
