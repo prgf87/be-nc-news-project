@@ -4,7 +4,7 @@ const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/');
 
-const endpoints = require('../endpoints.json');
+const endpointsFile = require('../endpoints.json');
 
 beforeEach(() => {
   return seed(data);
@@ -45,9 +45,9 @@ describe('app()', () => {
       return request(app)
         .get('/api')
         .expect(200)
-        .then(({ body: { endpoints } }) => {
-          expect(typeof endpoints).toBe('object');
-          Object.values(endpoints).forEach((object) => {
+        .then(({ body }) => {
+          expect(typeof body).toBe('object');
+          Object.values(body).forEach((object) => {
             expect(object).toHaveProperty('description', expect.any(String));
             expect(object).toHaveProperty('queries', expect.any(Array));
             expect(object).toHaveProperty(
@@ -55,8 +55,8 @@ describe('app()', () => {
               expect.any(Object)
             );
           });
+          expect(body).toEqual(endpointsFile);
         });
     });
-    it('400: return with a 400 error if a query is passed', () => {});
   });
 });

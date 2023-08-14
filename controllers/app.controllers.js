@@ -13,7 +13,7 @@ const getTopics = (request, response, next) => {
 const getEndPoints = (request, response, next) => {
   fetchEndPoints()
     .then((endpoints) => {
-      response.status(200).send({ endpoints: endpoints });
+      response.status(200).send(endpoints);
     })
     .catch(next);
 };
