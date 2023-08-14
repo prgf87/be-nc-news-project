@@ -1,4 +1,4 @@
-const { fetchAllTopics } = require('../models/app.models');
+const { fetchAllTopics, fetchEndPoints } = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
   fetchAllTopics()
@@ -10,9 +10,17 @@ const getTopics = (request, response, next) => {
     });
 };
 
+const getEndPoints = (request, response, next) => {
+  fetchEndPoints()
+    .then((endpoints) => {
+      response.status(200).send(endpoints);
+    })
+    .catch(next);
+};
+
 const getArticleById = (request, response, next) => {
   console.log('we are here!');
   response.status(200).send();
 };
 
-module.exports = { getTopics, getArticleById };
+module.exports = { getTopics, getEndPoints, getArticleById };

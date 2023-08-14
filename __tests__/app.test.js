@@ -4,6 +4,8 @@ const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/');
 
+const endpointsFile = require('../endpoints.json');
+
 beforeEach(() => {
   return seed(data);
 });
@@ -33,6 +35,28 @@ describe('app()', () => {
     });
     it('404: returns with a 404 error when making a request to an api that does not exist', () => {
       return request(app).get('/api/toothpicks').expect(404);
+    });
+  });
+  describe('/api', () => {
+    it('200: responds with status 200', () => {
+      return request(app).get('/api').expect(200);
+    });
+    it('200: should respond with a list of all available endpoints as a JSON object', () => {
+      return request(app)
+        .get('/api')
+        .expect(200)
+        .then(({ body }) => {
+          expect(typeof body).toBe('object');
+          Object.values(body).forEach((object) => {
+            expect(object).toHaveProperty('description', expect.any(String));
+            expect(object).toHaveProperty('queries', expect.any(Array));
+            expect(object).toHaveProperty(
+              'exampleResponse',
+              expect.any(Object)
+            );
+          });
+          expect(body).toEqual(endpointsFile);
+        });
     });
   });
   describe('/api/articles/:article_id', () => {
