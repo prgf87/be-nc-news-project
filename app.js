@@ -17,7 +17,6 @@ app.use((err, request, response, next) => {
 app.use((err, request, response, next) => {
   console.log(err);
   response.status(500).send({ err });
-  next();
 });
 
 module.exports = app;
