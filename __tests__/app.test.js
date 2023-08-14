@@ -5,6 +5,7 @@ const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/');
 
 const endpointsFile = require('../endpoints.json');
+const articlesFile = require('../db/data/test-data/articles');
 
 beforeEach(() => {
   return seed(data);
@@ -61,9 +62,9 @@ describe('app()', () => {
   });
   describe('/api/articles/:article_id', () => {
     it('200: return with a status of 200', () => {
-      return request(app).get('/api/articles/5').expect(200);
+      return request(app).get('/api/articles/1').expect(200);
     });
-    xit('200: return with a status of 200 and the corresponding article data', () => {
+    it('200: return with a status of 200 and the corresponding article 1 data', () => {
       return request(app)
         .get('/api/articles/1')
         .expect(200)
@@ -74,9 +75,33 @@ describe('app()', () => {
           expect(article).toHaveProperty('article_id', expect.any(Number));
           expect(article).toHaveProperty('body', expect.any(String));
           expect(article).toHaveProperty('topic', expect.any(String));
-          expect(article).toHaveProperty('created_at', expect.any(Number));
+          expect(article).toHaveProperty('created_at', expect.any(String));
           expect(article).toHaveProperty('votes', expect.any(Number));
           expect(article).toHaveProperty('article_img_url', expect.any(String));
+        });
+    });
+    it('200: return with a status of 200 and the corresponding article 5 data', () => {
+      return request(app)
+        .get('/api/articles/8')
+        .expect(200)
+        .then(({ body }) => {
+          const { article } = body;
+          expect(article).toHaveProperty('author', expect.any(String));
+          expect(article).toHaveProperty('title', expect.any(String));
+          expect(article).toHaveProperty('article_id', expect.any(Number));
+          expect(article).toHaveProperty('body', expect.any(String));
+          expect(article).toHaveProperty('topic', expect.any(String));
+          expect(article).toHaveProperty('created_at', expect.any(String));
+          expect(article).toHaveProperty('votes', expect.any(Number));
+          expect(article).toHaveProperty('article_img_url', expect.any(String));
+        });
+    });
+    it('400: return with a status of 400 when using the incorrect end point', () => {
+      return request(app)
+        .get('/api/articles/hello')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
         });
     });
   });

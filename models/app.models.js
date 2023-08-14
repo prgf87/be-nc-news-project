@@ -13,4 +13,14 @@ const fetchEndPoints = () => {
   });
 };
 
-module.exports = { fetchAllTopics, fetchEndPoints };
+const fetchArticleById = (id) => {
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = ${id}`)
+    .then(({ rows }) => {
+      const id = rows[0];
+
+      return id;
+    });
+};
+
+module.exports = { fetchAllTopics, fetchEndPoints, fetchArticleById };
