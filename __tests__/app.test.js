@@ -5,7 +5,6 @@ const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/');
 
 const endpointsFile = require('../endpoints.json');
-const articles = require('../db/data/test-data/articles');
 
 beforeEach(() => {
   return seed(data);
@@ -166,16 +165,3 @@ describe('app()', () => {
     });
   });
 });
-
-// an array of comments for the given article_id of which each comment should have the following properties:
-// comment_id
-// votes
-// created_at
-// author
-// body
-// article_id
-// Comments should be served with the most recent comments first.
-
-// Consider what errors could occur with this endpoint, and make sure to test for them.
-
-// Remember to add a description of this endpoint to your /api endpoint.

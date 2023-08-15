@@ -38,7 +38,7 @@ const fetchCommentsByArticleID = (id) => {
     )
     .then(({ rows }) => {
       const result = rows;
-      if (result === []) {
+      if (!result.length) {
         return Promise.reject({ status: 404, msg: 'Not found' });
       }
       return rows;
