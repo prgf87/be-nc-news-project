@@ -3,6 +3,7 @@ const {
   getEndPoints,
   getArticles,
   getArticleById,
+  getArticleComments,
 } = require('./controllers/app.controllers');
 
 const express = require('express');
@@ -17,6 +18,8 @@ app.get('/api/articles', getArticles);
 
 app.get('/api/articles/:article_id', getArticleById);
 
+app.get('/api/articles/:article_id/comments', getArticleComments);
+
 app.use((_, res) => {
   res.status(404).send({ msg: 'Not found' });
 });
@@ -30,7 +33,7 @@ app.use((err, request, response, next) => {
 });
 
 app.use((err, request, response, next) => {
-  if (err.code === '42703') {
+  if (err.code === '42703' || err.code === '22P02') {
     response.status(400).send({ msg: 'Bad request' });
   } else {
     next(err);
