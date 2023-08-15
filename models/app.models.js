@@ -13,6 +13,18 @@ const fetchEndPoints = () => {
   });
 };
 
+const fetchArticleById = (id) => {
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = ${id}`)
+    .then(({ rows }) => {
+      const id = rows[0];
+      if (!id) {
+        return Promise.reject({ status: 404, msg: 'Not found' });
+      }
+      return id;
+    });
+};
+
 const fetchArticles = () => {
   return db
     .query(
@@ -30,4 +42,9 @@ const fetchArticles = () => {
     });
 };
 
-module.exports = { fetchTopics, fetchEndPoints, fetchArticles };
+module.exports = {
+  fetchTopics,
+  fetchEndPoints,
+  fetchArticles,
+  fetchArticleById,
+};
