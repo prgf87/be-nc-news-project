@@ -1,6 +1,7 @@
 const {
   getTopics,
   getEndPoints,
+  getArticles,
   getArticleById,
 } = require('./controllers/app.controllers');
 
@@ -12,7 +13,13 @@ app.get('/api', getEndPoints);
 
 app.get('/api/topics', getTopics);
 
+app.get('/api/articles', getArticles);
+
 app.get('/api/articles/:article_id', getArticleById);
+
+app.use((_, res) => {
+  res.status(404).send({ msg: 'Not found' });
+});
 
 app.use((err, request, response, next) => {
   if (err.status) {

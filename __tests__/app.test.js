@@ -15,7 +15,7 @@ afterAll(() => {
 });
 
 describe('app()', () => {
-  describe('/api/topics', () => {
+  describe('GET /api/topics', () => {
     it('200: return with a status of 200', () => {
       return request(app).get('/api/topics').expect(200);
     });
@@ -34,10 +34,16 @@ describe('app()', () => {
         });
     });
     it('404: returns with a 404 error when making a request to an api that does not exist', () => {
-      return request(app).get('/api/toothpicks').expect(404);
+      return request(app)
+        .get('/api/toothpicks')
+        .expect(404)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe('Not found');
+        });
     });
   });
-  describe('/api', () => {
+  describe('GET /api', () => {
     it('200: responds with status 200', () => {
       return request(app).get('/api').expect(200);
     });
@@ -59,6 +65,7 @@ describe('app()', () => {
         });
     });
   });
+
   describe('/api/articles/:article_id', () => {
     it('200: return with a status of 200', () => {
       return request(app).get('/api/articles/1').expect(200);
@@ -94,6 +101,34 @@ describe('app()', () => {
         .then(({ body }) => {
           const { msg } = body;
           expect(msg).toBe('Not found');
+        });
+    });
+  });
+  describe('GET /api/articles', () => {
+    it('200: should receive status 200', () => {
+      return request(app).get('/api/articles').expect(200);
+    });
+    it('200: should receive status 200 and a body with all the articles inside and a count of the comments for each of those articles', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles.length).toBe(13);
+          expect(articles).toBeSortedBy('created_at', { descending: true });
+          articles.forEach((article) => {
+            expect(article).toHaveProperty('author', expect.any(String));
+            expect(article).toHaveProperty('title', expect.any(String));
+            expect(article).toHaveProperty('article_id', expect.any(Number));
+            expect(article).toHaveProperty('topic', expect.any(String));
+            expect(article).toHaveProperty('created_at', expect.any(String));
+            expect(article).toHaveProperty('votes', expect.any(Number));
+            expect(article).toHaveProperty(
+              'article_img_url',
+              expect.any(String)
+            );
+            expect(article).toHaveProperty('comment_count', expect.any(String));
+          });
         });
     });
   });
