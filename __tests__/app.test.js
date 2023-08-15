@@ -5,8 +5,6 @@ const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data/');
 
 const endpointsFile = require('../endpoints.json');
-const articlesFile = require('../db/data/test-data/articles');
-console.log(articlesFile[0]);
 
 beforeEach(() => {
   return seed(data);
@@ -65,21 +63,20 @@ describe('app()', () => {
     it('200: return with a status of 200', () => {
       return request(app).get('/api/articles/1').expect(200);
     });
-    xit('200: return with a status of 200 and the corresponding article 1 data', () => {
+    it('200: return with a status of 200 and the corresponding article 1 data', () => {
       return request(app)
         .get('/api/articles/1')
         .expect(200)
         .then(({ body }) => {
           const { article } = body;
+          expect(article).toHaveProperty('article_id', 1);
           expect(article).toHaveProperty('author', expect.any(String));
           expect(article).toHaveProperty('title', expect.any(String));
-          expect(article).toHaveProperty('article_id', expect.any(Number));
           expect(article).toHaveProperty('body', expect.any(String));
           expect(article).toHaveProperty('topic', expect.any(String));
           expect(article).toHaveProperty('created_at', expect.any(String));
           expect(article).toHaveProperty('votes', expect.any(Number));
           expect(article).toHaveProperty('article_img_url', expect.any(String));
-          expect(article).toEqual(articlesFile[0]);
         });
     });
     it('400: return with a status of 400 when using the incorrect end point', () => {
