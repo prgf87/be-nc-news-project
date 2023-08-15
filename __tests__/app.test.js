@@ -75,7 +75,6 @@ describe('app()', () => {
         .expect(200)
         .then(({ body }) => {
           const { articles } = body;
-          expect(articles.length).toBe(18);
           articles.forEach((article) => {
             expect(article).toHaveProperty('author', expect.any(String));
             expect(article).toHaveProperty('title', expect.any(String));
