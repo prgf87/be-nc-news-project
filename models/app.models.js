@@ -25,4 +25,29 @@ const fetchArticleById = (id) => {
     });
 };
 
-module.exports = { fetchAllTopics, fetchEndPoints, fetchArticleById };
+const fetchCommentsByArticleID = (id) => {
+  return db
+    .query(
+      `
+    SELECT * FROM comments 
+    LEFT JOIN articles ON articles.article_id = comments.article_id
+    WHERE articles.article_id = $1
+    ORDER BY comments.created_at ASC
+  `,
+      [id]
+    )
+    .then(({ rows }) => {
+      const result = rows;
+      if (result === []) {
+        return Promise.reject({ status: 404, msg: 'Not found' });
+      }
+      return rows;
+    });
+};
+
+module.exports = {
+  fetchAllTopics,
+  fetchEndPoints,
+  fetchArticleById,
+  fetchCommentsByArticleID,
+};
