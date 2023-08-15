@@ -3,7 +3,6 @@ const {
   fetchEndPoints,
   fetchArticles,
   fetchArticleById,
-  putNewComment,
 } = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
@@ -37,6 +36,15 @@ const getArticleById = (request, response, next) => {
     });
 };
 
+const getArticleComments = (request, response, next) => {
+  const { article_id } = request.params;
+  fetchCommentsByArticleID(article_id)
+    .then((data) => {
+      response.status(200).send({ comments: data });
+    })
+    .catch(next);
+};
+
 const getArticles = (request, response, next) => {
   fetchArticles()
     .then((articles) => {
@@ -57,10 +65,4 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
-module.exports = {
-  getTopics,
-  getEndPoints,
-  getArticleById,
-  getArticles,
-  postCommentByArticleId,
-};
+module.exports = { getTopics, getEndPoints, getArticleById, getArticles };
