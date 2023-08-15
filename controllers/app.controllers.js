@@ -33,7 +33,6 @@ const getArticleById = (request, response, next) => {
 const getArticles = (request, response, next) => {
   fetchArticles()
     .then((articles) => {
-      console.log(articles);
       response.status(200).send({ articles: articles });
     })
     .catch(next);
