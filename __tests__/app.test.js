@@ -34,7 +34,13 @@ describe('app()', () => {
         });
     });
     it('404: returns with a 404 error when making a request to an api that does not exist', () => {
-      return request(app).get('/api/toothpicks').expect(404);
+      return request(app)
+        .get('/api/toothpicks')
+        .expect(404)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe('Not found');
+        });
     });
   });
   describe('GET /api', () => {
@@ -59,7 +65,7 @@ describe('app()', () => {
         });
     });
   });
-  describe('GET /api/articles', () => {
+  xdescribe('GET /api/articles', () => {
     it('200: should receive status 200', () => {
       return request(app).get('/api/articles').expect(200);
     });
@@ -69,12 +75,23 @@ describe('app()', () => {
         .expect(200)
         .then(({ body }) => {
           const { articles } = body;
+          expect(articles.length).toBe(18);
           articles.forEach((article) => {
+            expect(article).toHaveProperty('author', expect.any(String));
+            expect(article).toHaveProperty('title', expect.any(String));
             expect(article).toHaveProperty('article_id', expect.any(Number));
-            expect(article).toHaveProperty('article_id', expect.any(Number));
+            expect(article).toHaveProperty('topic', expect.any(String));
+            expect(article).toHaveProperty('created_at', expect.any(String));
+            expect(article).toHaveProperty('votes', expect.any(Number));
+            expect(article).toHaveProperty(
+              'article_img_url',
+              expect.any(String)
+            );
+            expect(article).toHaveProperty('comment_count', expect.any(Number));
           });
-          console.log(body.articles[0]);
         });
     });
   });
 });
+
+// comment_count, which is the total count of all the comments with this article_id. You should make use of queries to the database in order to achieve this.

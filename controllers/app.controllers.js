@@ -22,7 +22,8 @@ const getEndPoints = (request, response, next) => {
 
 const getArticles = (request, response, next) => {
   fetchArticles()
-    .then((articles) => {
+    .then((data) => {
+      console.log(data);
       response.status(200).send({ articles: articles });
     })
     .catch(next);
