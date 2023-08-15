@@ -1,13 +1,15 @@
-const { fetchAllTopics, fetchEndPoints } = require('../models/app.models');
+const {
+  fetchTopics,
+  fetchEndPoints,
+  fetchArticles,
+} = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
-  fetchAllTopics()
+  fetchTopics()
     .then((topics) => {
       response.status(200).send({ topics: topics });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const getEndPoints = (request, response, next) => {
@@ -18,4 +20,12 @@ const getEndPoints = (request, response, next) => {
     .catch(next);
 };
 
-module.exports = { getTopics, getEndPoints };
+const getArticles = (request, response, next) => {
+  fetchArticles()
+    .then((articles) => {
+      response.status(200).send({ articles: articles });
+    })
+    .catch(next);
+};
+
+module.exports = { getTopics, getEndPoints, getArticles };

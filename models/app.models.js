@@ -1,7 +1,7 @@
 const db = require('../db/connection');
 const { readFile } = require('node:fs/promises');
 
-const fetchAllTopics = () => {
+const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
     return rows;
   });
@@ -13,4 +13,10 @@ const fetchEndPoints = () => {
   });
 };
 
-module.exports = { fetchAllTopics, fetchEndPoints };
+const fetchArticles = () => {
+  return db.query(`SELECT * FROM articles`).then(({ rows }) => {
+    return rows;
+  });
+};
+
+module.exports = { fetchTopics, fetchEndPoints, fetchArticles };

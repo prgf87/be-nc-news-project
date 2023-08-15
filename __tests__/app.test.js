@@ -15,7 +15,7 @@ afterAll(() => {
 });
 
 describe('app()', () => {
-  describe('/api/topics', () => {
+  describe('GET /api/topics', () => {
     it('200: return with a status of 200', () => {
       return request(app).get('/api/topics').expect(200);
     });
@@ -37,7 +37,7 @@ describe('app()', () => {
       return request(app).get('/api/toothpicks').expect(404);
     });
   });
-  describe('/api', () => {
+  describe('GET /api', () => {
     it('200: responds with status 200', () => {
       return request(app).get('/api').expect(200);
     });
@@ -56,6 +56,24 @@ describe('app()', () => {
             );
           });
           expect(body).toEqual(endpointsFile);
+        });
+    });
+  });
+  describe('GET /api/articles', () => {
+    it('200: should receive status 200', () => {
+      return request(app).get('/api/articles').expect(200);
+    });
+    it('200: should receive status 200 and a body with all the articles inside', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          articles.forEach((article) => {
+            expect(article).toHaveProperty('article_id', expect.any(Number));
+            expect(article).toHaveProperty('article_id', expect.any(Number));
+          });
+          console.log(body.articles[0]);
         });
     });
   });
