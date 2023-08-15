@@ -132,4 +132,24 @@ describe('app()', () => {
         });
     });
   });
+  xdescribe('POST', () => {
+    describe('/api/articles/:article_id/comments', () => {
+      it('201: should respond with status 201 and a body object containing the inserted comment inside the correct article (1)', () => {
+        const newComment = {
+          username: 'Keb84',
+          body: 'Really great work on this ticket!',
+        };
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201)
+          .then(({ body }) => {
+            const { comment } = body;
+            expect(comment).toHaveProperty('username', expect.any(String));
+            expect(comment).toHaveProperty('body', expect.any(String));
+            expect(comment.body).toBe(newComment.body);
+          });
+      });
+    });
+  });
 });

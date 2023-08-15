@@ -40,9 +40,26 @@ const fetchArticles = () => {
     });
 };
 
+const putNewComment = (newComment, id) => {
+  const { username, body } = newComment;
+  return db
+    .query(
+      `
+      INSERT INTO comments(body, author, article_id)
+      VALUES ($1, $2, $3)
+      RETURNING *`,
+      [body, 1, id]
+    )
+    .then(({ rows }) => {
+      console.log(rows);
+      return rows;
+    });
+};
+
 module.exports = {
   fetchTopics,
   fetchEndPoints,
   fetchArticles,
   fetchArticleById,
+  putNewComment,
 };

@@ -3,11 +3,14 @@ const {
   getEndPoints,
   getArticles,
   getArticleById,
+  postCommentByArticleId,
 } = require('./controllers/app.controllers');
 
 const express = require('express');
 
 const app = express();
+
+app.use(express.json());
 
 app.get('/api', getEndPoints);
 
@@ -16,6 +19,8 @@ app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 
 app.get('/api/articles/:article_id', getArticleById);
+
+app.post('/api/articles/:article_id/comments', postCommentByArticleId);
 
 app.use((_, res) => {
   res.status(404).send({ msg: 'Not found' });
