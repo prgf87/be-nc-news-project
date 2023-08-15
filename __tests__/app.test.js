@@ -6,6 +6,7 @@ const data = require('../db/data/test-data/');
 
 const endpointsFile = require('../endpoints.json');
 const articlesFile = require('../db/data/test-data/articles');
+console.log(articlesFile[0]);
 
 beforeEach(() => {
   return seed(data);
@@ -78,22 +79,7 @@ describe('app()', () => {
           expect(article).toHaveProperty('created_at', expect.any(String));
           expect(article).toHaveProperty('votes', expect.any(Number));
           expect(article).toHaveProperty('article_img_url', expect.any(String));
-        });
-    });
-    it('200: return with a status of 200 and the corresponding article 5 data', () => {
-      return request(app)
-        .get('/api/articles/8')
-        .expect(200)
-        .then(({ body }) => {
-          const { article } = body;
-          expect(article).toHaveProperty('author', expect.any(String));
-          expect(article).toHaveProperty('title', expect.any(String));
-          expect(article).toHaveProperty('article_id', expect.any(Number));
-          expect(article).toHaveProperty('body', expect.any(String));
-          expect(article).toHaveProperty('topic', expect.any(String));
-          expect(article).toHaveProperty('created_at', expect.any(String));
-          expect(article).toHaveProperty('votes', expect.any(Number));
-          expect(article).toHaveProperty('article_img_url', expect.any(String));
+          expect(article).toEqual(articlesFile[0]);
         });
     });
     it('400: return with a status of 400 when using the incorrect end point', () => {
@@ -102,6 +88,15 @@ describe('app()', () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe('Bad request');
+        });
+    });
+    it('404: when making a valid request but the information does not exist', () => {
+      return request(app)
+        .get('/api/articles/999')
+        .expect(404)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe('Not found');
         });
     });
   });
