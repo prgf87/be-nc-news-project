@@ -59,4 +59,42 @@ describe('app()', () => {
         });
     });
   });
+  describe('/api/articles/:article_id', () => {
+    it('200: return with a status of 200', () => {
+      return request(app).get('/api/articles/1').expect(200);
+    });
+    it('200: return with a status of 200 and the corresponding article 1 data', () => {
+      return request(app)
+        .get('/api/articles/1')
+        .expect(200)
+        .then(({ body }) => {
+          const { article } = body;
+          expect(article).toHaveProperty('article_id', 1);
+          expect(article).toHaveProperty('author', expect.any(String));
+          expect(article).toHaveProperty('title', expect.any(String));
+          expect(article).toHaveProperty('body', expect.any(String));
+          expect(article).toHaveProperty('topic', expect.any(String));
+          expect(article).toHaveProperty('created_at', expect.any(String));
+          expect(article).toHaveProperty('votes', expect.any(Number));
+          expect(article).toHaveProperty('article_img_url', expect.any(String));
+        });
+    });
+    it('400: return with a status of 400 when using the incorrect end point', () => {
+      return request(app)
+        .get('/api/articles/hello')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
+    it('404: when making a valid request but the information does not exist', () => {
+      return request(app)
+        .get('/api/articles/999')
+        .expect(404)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe('Not found');
+        });
+    });
+  });
 });

@@ -1,4 +1,8 @@
-const { getTopics, getEndPoints } = require('./controllers/app.controllers');
+const {
+  getTopics,
+  getEndPoints,
+  getArticleById,
+} = require('./controllers/app.controllers');
 
 const express = require('express');
 
@@ -8,9 +12,19 @@ app.get('/api', getEndPoints);
 
 app.get('/api/topics', getTopics);
 
+app.get('/api/articles/:article_id', getArticleById);
+
 app.use((err, request, response, next) => {
   if (err.status) {
     response.status(err.status).send({ msg: err.msg });
+  } else {
+    next(err);
+  }
+});
+
+app.use((err, request, response, next) => {
+  if (err.code === '42703') {
+    response.status(400).send({ msg: 'Bad request' });
   } else {
     next(err);
   }
