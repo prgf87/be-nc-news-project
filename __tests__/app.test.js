@@ -154,7 +154,7 @@ describe('app()', () => {
             expect(body.msg).toBe('Bad request');
           });
       });
-      it('404: should return a status 404 and a message of Not found when a bad request is made', () => {
+      it('404: should return a status 404 and a message of Not found when it cannot find the id given', () => {
         return request(app)
           .get('/api/articles/999/comments')
           .expect(404)
@@ -164,11 +164,11 @@ describe('app()', () => {
       });
     });
   });
-  xdescribe('POST', () => {
+  describe('POST', () => {
     describe('/api/articles/:article_id/comments', () => {
       it('201: should respond with status 201 and a body object containing the inserted comment inside the correct article (1)', () => {
         const newComment = {
-          username: 'Keb84',
+          username: 'icellusedkars',
           body: 'Really great work on this ticket!',
         };
         return request(app)
@@ -177,9 +177,35 @@ describe('app()', () => {
           .expect(201)
           .then(({ body }) => {
             const { comment } = body;
-            expect(comment).toHaveProperty('username', expect.any(String));
+            expect(comment).toHaveProperty('author', expect.any(String));
             expect(comment).toHaveProperty('body', expect.any(String));
             expect(comment.body).toBe(newComment.body);
+          });
+      });
+      it('400: should return a status 400 and a message of Bad request when a bad request is made', () => {
+        const newComment = {
+          username: 'icellusedkars',
+          body: 'Really great work on this ticket!',
+        };
+        return request(app)
+          .post('/api/articles/hello/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Bad request');
+          });
+      });
+      it('404: should return a status 404 and a message of Not found when it cannot post to a comment as the article does not exist', () => {
+        const newComment = {
+          username: 'icellusedkars',
+          body: 'Really great work on this ticket!',
+        };
+        return request(app)
+          .post('/api/articles/999/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Article not found');
           });
       });
     });

@@ -3,6 +3,8 @@ const {
   fetchEndPoints,
   fetchArticles,
   fetchArticleById,
+  fetchCommentsByArticleID,
+  putNewComment,
 } = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
@@ -65,4 +67,11 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
-module.exports = { getTopics, getEndPoints, getArticleById, getArticles };
+module.exports = {
+  getTopics,
+  getEndPoints,
+  getArticleById,
+  getArticles,
+  postCommentByArticleId,
+  getArticleComments,
+};

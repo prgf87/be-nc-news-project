@@ -67,11 +67,10 @@ const putNewComment = (newComment, id) => {
       INSERT INTO comments(body, author, article_id)
       VALUES ($1, $2, $3)
       RETURNING *`,
-      [body, 1, id]
+      [body, username, id]
     )
     .then(({ rows }) => {
-      console.log(rows);
-      return rows;
+      return rows[0];
     });
 };
 
