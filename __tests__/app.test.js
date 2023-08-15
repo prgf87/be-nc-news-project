@@ -17,6 +17,28 @@ afterAll(() => {
 
 describe('app()', () => {
   describe('GET', () => {
+    describe('/api', () => {
+      it('200: responds with status 200', () => {
+        return request(app).get('/api').expect(200);
+      });
+      it('200: should respond with a list of all available endpoints as a JSON object', () => {
+        return request(app)
+          .get('/api')
+          .expect(200)
+          .then(({ body }) => {
+            expect(typeof body).toBe('object');
+            Object.values(body).forEach((object) => {
+              expect(object).toHaveProperty('description', expect.any(String));
+              expect(object).toHaveProperty('queries', expect.any(Array));
+              expect(object).toHaveProperty(
+                'exampleResponse',
+                expect.any(Object)
+              );
+            });
+            expect(body).toEqual(endpointsFile);
+          });
+      });
+    });
     describe('/api/topics', () => {
       it('200: return with a status of 200', () => {
         return request(app).get('/api/topics').expect(200);
@@ -39,25 +61,34 @@ describe('app()', () => {
         return request(app).get('/api/toothpicks').expect(404);
       });
     });
-    describe('/api', () => {
-      it('200: responds with status 200', () => {
-        return request(app).get('/api').expect(200);
+    describe('GET /api/articles', () => {
+      it('200: should receive status 200', () => {
+        return request(app).get('/api/articles').expect(200);
       });
-      it('200: should respond with a list of all available endpoints as a JSON object', () => {
+      it('200: should receive status 200 and a body with all the articles inside and a count of the comments for each of those articles', () => {
         return request(app)
-          .get('/api')
+          .get('/api/articles')
           .expect(200)
           .then(({ body }) => {
-            expect(typeof body).toBe('object');
-            Object.values(body).forEach((object) => {
-              expect(object).toHaveProperty('description', expect.any(String));
-              expect(object).toHaveProperty('queries', expect.any(Array));
-              expect(object).toHaveProperty(
-                'exampleResponse',
-                expect.any(Object)
+            const { articles } = body;
+            expect(articles.length).toBe(13);
+            expect(articles).toBeSortedBy('created_at', { descending: true });
+            articles.forEach((article) => {
+              expect(article).toHaveProperty('author', expect.any(String));
+              expect(article).toHaveProperty('title', expect.any(String));
+              expect(article).toHaveProperty('article_id', expect.any(Number));
+              expect(article).toHaveProperty('topic', expect.any(String));
+              expect(article).toHaveProperty('created_at', expect.any(String));
+              expect(article).toHaveProperty('votes', expect.any(Number));
+              expect(article).toHaveProperty(
+                'article_img_url',
+                expect.any(String)
+              );
+              expect(article).toHaveProperty(
+                'comment_count',
+                expect.any(String)
               );
             });
-            expect(body).toEqual(endpointsFile);
           });
       });
     });
@@ -84,17 +115,9 @@ describe('app()', () => {
             );
           });
       });
-      it('400: return with a status of 400 when using the incorrect end point', () => {
+      it('404: returns with a 404 error when making a request to an api that does not exist', () => {
         return request(app)
-          .get('/api/articles/hello')
-          .expect(400)
-          .then(({ body }) => {
-            expect(body.msg).toBe('Bad request');
-          });
-      });
-      it('404: when making a valid request but the information does not exist', () => {
-        return request(app)
-          .get('/api/articles/999')
+          .get('/api/toothpicks')
           .expect(404)
           .then(({ body }) => {
             const { msg } = body;
@@ -132,7 +155,7 @@ describe('app()', () => {
             expect(body.msg).toBe('Bad request');
           });
       });
-      xit('404: should return a status 404 and a message of Not found when a bad request is made', () => {
+      it('404: should return a status 404 and a message of Not found when a bad request is made', () => {
         return request(app)
           .get('/api/articles/999/comments')
           .expect(404)

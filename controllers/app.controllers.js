@@ -1,12 +1,13 @@
 const {
-  fetchAllTopics,
+  fetchTopics,
   fetchEndPoints,
+  fetchArticles,
   fetchArticleById,
   fetchCommentsByArticleID,
 } = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
-  fetchAllTopics()
+  fetchTopics()
     .then((topics) => {
       response.status(200).send({ topics: topics });
     })
@@ -39,9 +40,18 @@ const getArticleComments = (request, response, next) => {
     .catch(next);
 };
 
+const getArticles = (request, response, next) => {
+  fetchArticles()
+    .then((articles) => {
+      response.status(200).send({ articles: articles });
+    })
+    .catch(next);
+};
+
 module.exports = {
   getTopics,
   getEndPoints,
   getArticleById,
+  getArticles,
   getArticleComments,
 };
