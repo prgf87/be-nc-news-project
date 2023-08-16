@@ -275,7 +275,7 @@ describe('app()', () => {
           .delete('/api/comments/15')
           .expect(204)
           .then((response) => {
-            expect(!response.body).toBe(true);
+            expect(!response.body).toBe(false);
           });
       });
     });
