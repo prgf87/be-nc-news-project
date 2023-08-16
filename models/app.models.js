@@ -60,6 +60,32 @@ const fetchArticles = () => {
     });
 };
 
+
+const updateArticle = (votes, id) => {
+  const { inc_votes } = votes;
+  return db
+    .query(
+      `
+      UPDATE articles  
+      SET
+      votes = $1
+      WHERE
+      article_id = $2
+      RETURNING *;
+    `,
+      [inc_votes, id]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: 'Not found',
+        });
+      }
+      return rows[0];
+    });
+};
+
 const putNewComment = (newComment, id) => {
   const { username, body } = newComment;
 
@@ -76,6 +102,7 @@ const putNewComment = (newComment, id) => {
     });
 };
 
+
 module.exports = {
   fetchEndPoints,
   fetchArticleById,
@@ -84,5 +111,7 @@ module.exports = {
   fetchEndPoints,
   fetchArticles,
   fetchArticleById,
+  updateArticle,
   putNewComment,
+
 };

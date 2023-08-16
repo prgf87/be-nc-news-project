@@ -4,7 +4,9 @@ const {
   fetchArticles,
   fetchArticleById,
   fetchCommentsByArticleID,
+  updateArticle,
   putNewComment,
+
 } = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
@@ -67,6 +69,16 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
+const patchArticle = (request, response, next) => {
+  const { article_id } = request.params;
+  const newVote = response.req.body;
+  updateArticle(newVote, article_id)
+    .then((article) => {
+      response.status(200).send({ article: article });
+    })
+    .catch(next);
+};
+
 module.exports = {
   getTopics,
   getEndPoints,
@@ -74,4 +86,5 @@ module.exports = {
   getArticles,
   postCommentByArticleId,
   getArticleComments,
+  patchArticle,
 };
