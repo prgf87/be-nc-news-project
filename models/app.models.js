@@ -1,5 +1,6 @@
 const db = require('../db/connection');
 const { readFile } = require('node:fs/promises');
+const users = require('../db/data/test-data/users');
 
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
@@ -59,6 +60,7 @@ const fetchArticles = () => {
     });
 };
 
+
 const updateArticle = (votes, id) => {
   const { inc_votes } = votes;
   return db
@@ -83,6 +85,24 @@ const updateArticle = (votes, id) => {
       return rows[0];
     });
 };
+
+const putNewComment = (newComment, id) => {
+  const { username, body } = newComment;
+
+  return db
+    .query(
+      `
+        INSERT INTO comments(body, author, article_id)
+        VALUES ($1, $2, $3)
+        RETURNING *`,
+      [body, username, id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
+
 module.exports = {
   fetchEndPoints,
   fetchArticleById,
@@ -92,4 +112,6 @@ module.exports = {
   fetchArticles,
   fetchArticleById,
   updateArticle,
+  putNewComment,
+
 };
