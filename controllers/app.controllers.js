@@ -7,7 +7,7 @@ const {
   updateArticle,
   putNewComment,
   removeComment,
-} = require('../models/app.models');
+} = require("../models/app.models");
 
 const getTopics = (request, response, next) => {
   fetchTopics()
@@ -62,8 +62,8 @@ const postCommentByArticleId = (request, response, next) => {
 };
 
 const deleteComment = (request, response, next) => {
-  const { commnent_id } = request.params;
-  removeComment(commnent_id)
+  const { comment_id } = request.params;
+  removeComment(comment_id)
     .then(() => {
       response.status(204).send();
     })

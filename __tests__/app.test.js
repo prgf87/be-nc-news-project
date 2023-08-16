@@ -379,13 +379,23 @@ describe("app()", () => {
             expect(!response.body).toBe(false);
           });
       });
-      it("204: respond with status 400 and an empty body when passed an id that doesnt exit", () => {
+      it("400: should respond with a status of 400 and msg of Bad request when passed an incorrect endpoint", () => {
+        return request(app)
+          .delete("/api/comments/hello")
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad request");
+          });
+      });
+      it("404: respond with status 404 and an empty body when passed an id that doesnt exit", () => {
         return request(app)
           .delete("/api/comments/999")
-          .expect(204)
-          .then((response) => {
+          .expect(404)
+          .then(({ body }) => {
             expect(data.commentData.length === 18);
-            expect(!response.body).toBe(false);
+            const { msg } = body;
+            expect(msg).toBe("Not found");
           });
       });
     });
