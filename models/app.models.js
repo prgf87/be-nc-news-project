@@ -1,5 +1,6 @@
 const db = require('../db/connection');
 const { readFile } = require('node:fs/promises');
+const users = require('../db/data/test-data/users');
 
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
@@ -61,12 +62,13 @@ const fetchArticles = () => {
 
 const putNewComment = (newComment, id) => {
   const { username, body } = newComment;
+
   return db
     .query(
       `
-      INSERT INTO comments(body, author, article_id)
-      VALUES ($1, $2, $3)
-      RETURNING *`,
+        INSERT INTO comments(body, author, article_id)
+        VALUES ($1, $2, $3)
+        RETURNING *`,
       [body, username, id]
     )
     .then(({ rows }) => {

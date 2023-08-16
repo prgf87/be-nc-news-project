@@ -182,6 +182,26 @@ describe('app()', () => {
             expect(comment.body).toBe(newComment.body);
           });
       });
+      it('201: should return a status 201 and a message containing the new comment even when passed additional incorrect information inside request', () => {
+        const newComment = {
+          username: 'icellusedkars',
+          body: 'Really great work on this ticket!',
+          banana: true,
+        };
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201)
+          .then(({ body }) => {
+            const { comment } = body;
+            expect(comment).toHaveProperty('author', 'icellusedkars');
+            expect(comment).toHaveProperty(
+              'body',
+              'Really great work on this ticket!'
+            );
+            expect(comment).not.toHaveProperty('banana', true);
+          });
+      });
       it('400: should return a status 400 and a message of Bad request when a bad request is made', () => {
         const newComment = {
           username: 'icellusedkars',
@@ -195,6 +215,31 @@ describe('app()', () => {
             expect(body.msg).toBe('Bad request');
           });
       });
+      it('400: should return a status 400 and a message of Bad request when a bad request is made - no body', () => {
+        const newComment = {
+          username: 'icellusedkars',
+        };
+        return request(app)
+          .post('/api/articles/hello/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Bad request');
+          });
+      });
+      it('400: should return a status 400 and a message of Bad request when a bad request is made - no username', () => {
+        const newComment = {
+          body: 'Really great work on this ticket!',
+        };
+        return request(app)
+          .post('/api/articles/hello/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Bad request');
+          });
+      });
+
       it('404: should return a status 404 and a message of Not found when it cannot post to a comment as the article does not exist', () => {
         const newComment = {
           username: 'icellusedkars',
@@ -205,7 +250,20 @@ describe('app()', () => {
           .send(newComment)
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).toBe('Article not found');
+            expect(body.msg).toBe('Not found');
+          });
+      });
+      it('404: should return a status 404 and a message of Not found when it cannot post a comment as the username does not exist', () => {
+        const newComment = {
+          username: 'notarealuser',
+          body: 'Really great work on this ticket!',
+        };
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Not found');
           });
       });
     });
