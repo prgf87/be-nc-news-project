@@ -240,6 +240,17 @@ describe('app()', () => {
             expect(msg).toBe('Bad request');
           });
       });
+      it('400: should respond with a status of 400 and a message of Bad request when the article doesnt exist (notanid)', () => {
+        const newVote = { inc_votes: -100 };
+        return request(app)
+          .patch('/api/articles/notanid')
+          .send(newVote)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe('Bad request');
+          });
+      });
       it('404: should respond with a status of 404 and a message of Not found when the article doesnt exist (999)', () => {
         const newVote = { inc_votes: -100 };
         return request(app)
@@ -254,14 +265,3 @@ describe('app()', () => {
     });
   });
 });
-
-// Should:
-
-// be available on /api/articles/:article_id.
-// update an article by article_id.
-// Request body accepts:
-
-// an object in the form { inc_votes: newVote }.
-// newVote will indicate how much the votes property in the database should be updated by, e.g.
-// { inc_votes : 1 } would increment the current article's vote property by 1
-// { inc_votes : -100 } would decrement the current article's vote property by 100
