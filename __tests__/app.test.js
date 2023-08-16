@@ -167,7 +167,7 @@ describe('app()', () => {
   describe('PATCH', () => {
     describe('/api/articles/:article_id', () => {
       it('200: should respond with a status of 200 and update the value of votes accordingly', () => {
-        const newVote = { inc_votes: 1 };
+        const newVote = { inc_votes: 500 };
         return request(app)
           .patch('/api/articles/1')
           .send(newVote)
@@ -180,11 +180,75 @@ describe('app()', () => {
             expect(article).toHaveProperty('author', expect.any(String));
             expect(article).toHaveProperty('body', expect.any(String));
             expect(article).toHaveProperty('created_at', expect.any(String));
-            expect(article).toHaveProperty('votes', expect.any(Number));
+            expect(article).toHaveProperty('votes', 500);
             expect(article).toHaveProperty(
               'article_img_url',
               expect.any(String)
             );
+          });
+      });
+      it('200: should respond with a status of 200 and update the value of votes accordingly', () => {
+        const newVote = { inc_votes: -100 };
+        return request(app)
+          .patch('/api/articles/1')
+          .send(newVote)
+          .expect(200)
+          .then(({ body }) => {
+            const { article } = body;
+            expect(article.article_id).toBe(1);
+            expect(article).toHaveProperty('title', expect.any(String));
+            expect(article).toHaveProperty('topic', expect.any(String));
+            expect(article).toHaveProperty('author', expect.any(String));
+            expect(article).toHaveProperty('body', expect.any(String));
+            expect(article).toHaveProperty('created_at', expect.any(String));
+            expect(article).toHaveProperty('votes', -100);
+            expect(article).toHaveProperty(
+              'article_img_url',
+              expect.any(String)
+            );
+          });
+      });
+      it('200: should respond with a status of 200 and update the value of votes accordingly even when passed additional incorrect information', () => {
+        const newVote = { inc_votes: 50, banana: [true, false] };
+        return request(app)
+          .patch('/api/articles/1')
+          .send(newVote)
+          .expect(200)
+          .then(({ body }) => {
+            const { article } = body;
+            expect(article.article_id).toBe(1);
+            expect(article).toHaveProperty('title', expect.any(String));
+            expect(article).toHaveProperty('topic', expect.any(String));
+            expect(article).toHaveProperty('author', expect.any(String));
+            expect(article).toHaveProperty('body', expect.any(String));
+            expect(article).toHaveProperty('created_at', expect.any(String));
+            expect(article).toHaveProperty('votes', 50);
+            expect(article).toHaveProperty(
+              'article_img_url',
+              expect.any(String)
+            );
+          });
+      });
+      it('400: should respond with a status of 400 and a message of Bad request when sending incorrect data', () => {
+        const newVote = { inc_votes: 'hello' };
+        return request(app)
+          .patch('/api/articles/1')
+          .send(newVote)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe('Bad request');
+          });
+      });
+      it('404: should respond with a status of 404 and a message of Not found when the article doesnt exist (999)', () => {
+        const newVote = { inc_votes: -100 };
+        return request(app)
+          .patch('/api/articles/999')
+          .send(newVote)
+          .expect(404)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe('Not found');
           });
       });
     });

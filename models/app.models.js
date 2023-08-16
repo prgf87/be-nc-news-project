@@ -60,9 +60,7 @@ const fetchArticles = () => {
 };
 
 const updateArticle = (votes, id) => {
-  console.log(votes, 'votes****');
-  const vote = votes.inc_votes;
-  console.log(id, 'id****');
+  const { inc_votes } = votes;
   return db
     .query(
       `
@@ -73,10 +71,15 @@ const updateArticle = (votes, id) => {
       article_id = $2
       RETURNING *;
     `,
-      [vote, id]
+      [inc_votes, id]
     )
     .then(({ rows }) => {
-      console.log(rows[0]);
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: 'Not found',
+        });
+      }
       return rows[0];
     });
 };
