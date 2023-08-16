@@ -1,6 +1,6 @@
-const db = require('../db/connection');
-const { readFile } = require('node:fs/promises');
-const users = require('../db/data/test-data/users');
+const db = require("../db/connection");
+const { readFile } = require("node:fs/promises");
+const users = require("../db/data/test-data/users");
 
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
@@ -9,7 +9,7 @@ const fetchTopics = () => {
 };
 
 const fetchEndPoints = () => {
-  return readFile('endpoints.json', 'utf-8').then((file) => {
+  return readFile("endpoints.json", "utf-8").then((file) => {
     return JSON.parse(file);
   });
 };
@@ -20,7 +20,7 @@ const fetchArticleById = (id) => {
     .then(({ rows }) => {
       const id = rows[0];
       if (!id) {
-        return Promise.reject({ status: 404, msg: 'Not found' });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return id;
     });
@@ -40,7 +40,7 @@ const fetchCommentsByArticleID = (id) => {
     .then(({ rows }) => {
       const result = rows;
       if (!result.length) {
-        return Promise.reject({ status: 404, msg: 'Not found' });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return rows;
     });
@@ -78,7 +78,7 @@ const updateArticle = (votes, id) => {
       if (!rows.length) {
         return Promise.reject({
           status: 404,
-          msg: 'Not found',
+          msg: "Not found",
         });
       }
       return rows[0];
@@ -102,16 +102,12 @@ const putNewComment = (newComment, id) => {
 };
 
 const removeComment = (comment_id) => {
-  return db
-    .query(
-      `
-  DELETE FROM comments WHERE comment_id=$1 RETURNING *
+  return db.query(
+    `
+  DELETE FROM comments WHERE comment_id=$1
   `,
-      [comment_id]
-    )
-    .then((data) => {
-      console.log(data);
-    });
+    [comment_id]
+  );
 };
 
 module.exports = {
