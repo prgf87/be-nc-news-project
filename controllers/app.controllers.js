@@ -5,6 +5,7 @@ const {
   fetchArticleById,
   fetchCommentsByArticleID,
   putNewComment,
+  removeComment,
 } = require('../models/app.models');
 
 const getTopics = (request, response, next) => {
@@ -12,9 +13,7 @@ const getTopics = (request, response, next) => {
     .then((topics) => {
       response.status(200).send({ topics: topics });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const getEndPoints = (request, response, next) => {
@@ -22,9 +21,7 @@ const getEndPoints = (request, response, next) => {
     .then((endpoints) => {
       response.status(200).send(endpoints);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const getArticleById = (request, response, next) => {
@@ -33,9 +30,7 @@ const getArticleById = (request, response, next) => {
     .then((data) => {
       response.status(200).send({ article: data });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const getArticleComments = (request, response, next) => {
@@ -52,9 +47,7 @@ const getArticles = (request, response, next) => {
     .then((articles) => {
       response.status(200).send({ articles: articles });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const postCommentByArticleId = (request, response, next) => {
@@ -67,6 +60,15 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
+const deleteComment = (request, response, next) => {
+  const { commnent_id } = request.params;
+  removeComment(commnent_id)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch(next);
+};
+
 module.exports = {
   getTopics,
   getEndPoints,
@@ -74,4 +76,5 @@ module.exports = {
   getArticles,
   postCommentByArticleId,
   getArticleComments,
+  deleteComment,
 };

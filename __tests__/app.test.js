@@ -268,4 +268,16 @@ describe('app()', () => {
       });
     });
   });
+  describe('DELETE', () => {
+    describe('/api/comments/:comment_id', () => {
+      it('204: respond with status 204 and no body content', () => {
+        return request(app)
+          .delete('/api/comments/15')
+          .expect(204)
+          .then((response) => {
+            expect(!response.body).toBe(true);
+          });
+      });
+    });
+  });
 });
