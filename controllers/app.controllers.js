@@ -6,8 +6,7 @@ const {
   fetchCommentsByArticleID,
   updateArticle,
   putNewComment,
-
-} = require('../models/app.models');
+} = require("../models/app.models");
 
 const getTopics = (request, response, next) => {
   fetchTopics()
@@ -59,6 +58,10 @@ const getArticles = (request, response, next) => {
     });
 };
 
+const getUsers = (request, response, next) => {
+  response.status(200).send();
+};
+
 const postCommentByArticleId = (request, response, next) => {
   const { article_id } = request.params;
   const newComment = request.body;
@@ -87,4 +90,5 @@ module.exports = {
   postCommentByArticleId,
   getArticleComments,
   patchArticle,
+  getUsers,
 };
