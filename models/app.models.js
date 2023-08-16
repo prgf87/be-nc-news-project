@@ -59,6 +59,27 @@ const fetchArticles = () => {
     });
 };
 
+const updateArticle = (votes, id) => {
+  console.log(votes, 'votes****');
+  const vote = votes.inc_votes;
+  console.log(id, 'id****');
+  return db
+    .query(
+      `
+      UPDATE articles  
+      SET
+      votes = $1
+      WHERE
+      article_id = $2
+      RETURNING *;
+    `,
+      [vote, id]
+    )
+    .then(({ rows }) => {
+      console.log(rows[0]);
+      return rows[0];
+    });
+};
 module.exports = {
   fetchEndPoints,
   fetchArticleById,
@@ -67,4 +88,5 @@ module.exports = {
   fetchEndPoints,
   fetchArticles,
   fetchArticleById,
+  updateArticle,
 };

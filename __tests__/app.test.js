@@ -164,4 +164,40 @@ describe('app()', () => {
       });
     });
   });
+  describe('PATCH', () => {
+    describe('/api/articles/:article_id', () => {
+      it('200: should respond with a status of 200 and update the value of votes accordingly', () => {
+        const newVote = { inc_votes: 1 };
+        return request(app)
+          .patch('/api/articles/1')
+          .send(newVote)
+          .expect(200)
+          .then(({ body }) => {
+            const { article } = body;
+            expect(article.article_id).toBe(1);
+            expect(article).toHaveProperty('title', expect.any(String));
+            expect(article).toHaveProperty('topic', expect.any(String));
+            expect(article).toHaveProperty('author', expect.any(String));
+            expect(article).toHaveProperty('body', expect.any(String));
+            expect(article).toHaveProperty('created_at', expect.any(String));
+            expect(article).toHaveProperty('votes', expect.any(Number));
+            expect(article).toHaveProperty(
+              'article_img_url',
+              expect.any(String)
+            );
+          });
+      });
+    });
+  });
 });
+
+// Should:
+
+// be available on /api/articles/:article_id.
+// update an article by article_id.
+// Request body accepts:
+
+// an object in the form { inc_votes: newVote }.
+// newVote will indicate how much the votes property in the database should be updated by, e.g.
+// { inc_votes : 1 } would increment the current article's vote property by 1
+// { inc_votes : -100 } would decrement the current article's vote property by 100
