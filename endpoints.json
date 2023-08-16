@@ -73,12 +73,12 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "",
-    "queries": "",
-    "exampleResponse": ""
+    "queries": [],
+    "exampleResponse": {}
   },
   "PATCH /api/articles/:article_id": {
     "description": "",
-    "queries": "",
-    "exampleResponse": ""
+    "queries": [],
+    "exampleResponse": {}
   }
 }
