@@ -47,7 +47,7 @@ const getArticleComments = (request, response, next) => {
 const getArticles = (_, response, next) => {
   fetchArticles()
     .then((articles) => {
-      response.status(200).send({ articles: articles });
+      response.status(200).send({ articles });
     })
     .catch(next);
 };

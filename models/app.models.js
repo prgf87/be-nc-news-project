@@ -10,7 +10,7 @@ const fetchTopics = () => {
 
 const fetchEndPoints = () => {
   return readFile("endpoints.json", "utf-8").then((file) => {
-    return JSON.parse(file);
+    return file;
   });
 };
 
@@ -31,7 +31,6 @@ const fetchArticleById = (id) => {
       if (!article) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
-      console.log(article);
       return article;
     });
 };
