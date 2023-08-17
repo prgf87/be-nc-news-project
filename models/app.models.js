@@ -101,7 +101,6 @@ const putNewComment = (newComment, id) => {
     });
 };
 
-
 const fetchUsers = () => {
   return db
     .query(
@@ -110,7 +109,8 @@ const fetchUsers = () => {
     )
     .then(({ rows }) => {
       return rows;
-
+    });
+};
 const removeComment = (comment_id) => {
   return db
     .query(
@@ -138,5 +138,4 @@ module.exports = {
   putNewComment,
   fetchUsers,
   removeComment,
-
 };
