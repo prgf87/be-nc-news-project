@@ -5,7 +5,9 @@ const {
   getArticleById,
   postCommentByArticleId,
   getArticleComments,
+  deleteComment,
   patchArticle,
+  getUsers,
 } = require("./controllers/app.controllers");
 
 const express = require("express");
@@ -24,7 +26,14 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
 
+app.get("/api/users", getUsers);
+
 app.patch("/api/articles/:article_id", patchArticle);
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.delete('/api/comments/:comment_id', deleteComment);
+
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
@@ -46,7 +55,6 @@ app.use((err, request, response, next) => {
   } else if (
     err.code === "23503" ||
     err.code === "42703"
-    // err.code === "42601"
   ) {
     response.status(404).send({ msg: "Not found" });
   } else {

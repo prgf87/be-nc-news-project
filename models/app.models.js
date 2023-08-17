@@ -1,6 +1,7 @@
 const db = require("../db/connection");
 const { readFile } = require("node:fs/promises");
 const format = require("pg-format");
+
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
     return rows;
@@ -92,10 +93,12 @@ const fetchArticles = ({
 
   const formattedString = format(baseStr);
 
+
   return db.query(formattedString).then(({ rows }) => {
     return rows;
   });
 };
+
 
 const updateArticle = (votes, id) => {
   const { inc_votes } = votes;
@@ -138,6 +141,32 @@ const putNewComment = (newComment, id) => {
     });
 };
 
+
+const fetchUsers = () => {
+  return db
+    .query(
+      `
+  SELECT * FROM users`
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+const removeComment = (comment_id) => {
+  return db
+    .query(
+      `
+  DELETE FROM comments WHERE comment_id=$1 RETURNING *
+  `,
+      [comment_id]
+    )
+    .then(({ rows }) => {
+      if (!rows[0]) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+    });
+};
+
 module.exports = {
   fetchEndPoints,
   fetchArticleById,
@@ -148,4 +177,6 @@ module.exports = {
   fetchArticleById,
   updateArticle,
   putNewComment,
+  fetchUsers,
+  removeComment,
 };
