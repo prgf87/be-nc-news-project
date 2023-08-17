@@ -1,6 +1,6 @@
-const db = require('../db/connection');
-const { readFile } = require('node:fs/promises');
-const users = require('../db/data/test-data/users');
+const db = require("../db/connection");
+const { readFile } = require("node:fs/promises");
+const users = require("../db/data/test-data/users");
 
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
@@ -9,7 +9,7 @@ const fetchTopics = () => {
 };
 
 const fetchEndPoints = () => {
-  return readFile('endpoints.json', 'utf-8').then((file) => {
+  return readFile("endpoints.json", "utf-8").then((file) => {
     return JSON.parse(file);
   });
 };
@@ -20,7 +20,7 @@ const fetchArticleById = (id) => {
     .then(({ rows }) => {
       const id = rows[0];
       if (!id) {
-        return Promise.reject({ status: 404, msg: 'Not found' });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return id;
     });
@@ -40,26 +40,38 @@ const fetchCommentsByArticleID = (id) => {
     .then(({ rows }) => {
       const result = rows;
       if (!result.length) {
-        return Promise.reject({ status: 404, msg: 'Not found' });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
       return rows;
     });
 };
-const fetchArticles = () => {
-  return db
-    .query(
-      `
-    SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
+const fetchArticles = ({ topic }) => {
+  const acceptedTopics = ["mitch", "cats", "paper"];
+  console.log(topic);
+
+  let baseStr = "";
+
+  if (!acceptedTopics.includes(topic)) {
+    baseStr += `
+  SELECT articles.*, COUNT(comments.article_id) AS comment_count 
+  FROM articles
+  LEFT JOIN comments 
+  ON comments.article_id = articles.article_id `;
+  }
+
+  if (acceptedTopics.includes(topic)) {
+    baseStr += `WHERE articles.topic = topic AND topic = '${topic}' `;
+  }
+
+  baseStr += `    
     GROUP BY articles.article_id
     ORDER BY articles.created_at DESC
-  `
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+  `;
+  return db.query(baseStr).then(({ rows }) => {
+    console.log(rows);
+    return rows;
+  });
 };
-
 
 const updateArticle = (votes, id) => {
   const { inc_votes } = votes;
@@ -79,7 +91,7 @@ const updateArticle = (votes, id) => {
       if (!rows.length) {
         return Promise.reject({
           status: 404,
-          msg: 'Not found',
+          msg: "Not found",
         });
       }
       return rows[0];
@@ -102,7 +114,6 @@ const putNewComment = (newComment, id) => {
     });
 };
 
-
 module.exports = {
   fetchEndPoints,
   fetchArticleById,
@@ -113,5 +124,4 @@ module.exports = {
   fetchArticleById,
   updateArticle,
   putNewComment,
-
 };

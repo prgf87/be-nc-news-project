@@ -6,8 +6,7 @@ const {
   fetchCommentsByArticleID,
   updateArticle,
   putNewComment,
-
-} = require('../models/app.models');
+} = require("../models/app.models");
 
 const getTopics = (request, response, next) => {
   fetchTopics()
@@ -50,11 +49,14 @@ const getArticleComments = (request, response, next) => {
 };
 
 const getArticles = (request, response, next) => {
-  fetchArticles()
+  console.log(request.query);
+  const query = request.query;
+  fetchArticles(query)
     .then((articles) => {
       response.status(200).send({ articles: articles });
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 };

@@ -368,4 +368,38 @@ describe("app()", () => {
       });
     });
   });
+  describe("Queries", () => {
+    describe("/api/articles?topic=mitch", () => {
+      it("200: should respond with a status code of 200", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then(({ body }) => {
+            const { articles } = body;
+            expect(articles.length).toBe(12);
+            articles.forEach((article) => {
+              expect(article).toHaveProperty("topic", "mitch");
+            });
+          });
+      });
+      it("400: should return status 400 and msg of Bad request when passed an incorrect topic, ie: bananas", () => {
+        return request(app)
+          .get("/api/articles?topic=bananas")
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad request");
+          });
+      });
+    });
+  });
 });
+
+// topic, which filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles.
+// sort_by, which sorts the articles by any valid column (defaults to date).
+// order, which can be set to asc or desc for ascending or descending (defaults to descending).
+// Consider what errors could occur with this endpoint, and make sure to test for them.
+
+// You should not have to amend any previous tests.
+
+// Remember to add a description of this endpoint to your /api endpoint.
