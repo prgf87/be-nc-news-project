@@ -4,6 +4,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/");
 
+
 const endpointsFile = require("../endpoints.json");
 
 beforeEach(() => {
@@ -364,6 +365,40 @@ describe("app()", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("Not found");
+
+          });
+      });
+    });
+  });
+  describe("DELETE", () => {
+    describe("/api/comments/:comment_id", () => {
+      it("204: respond with status 204 and no body content", () => {
+        return request(app)
+          .delete("/api/comments/15")
+          .expect(204)
+          .then((response) => {
+            expect(data.commentData.length === 17);
+            expect(!response.body).toBe(false);
+          });
+      });
+      it("400: should respond with a status of 400 and msg of Bad request when passed an incorrect endpoint", () => {
+        return request(app)
+          .delete("/api/comments/hello")
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad request");
+          });
+      });
+      it("404: respond with status 404 and an empty body when passed an id that doesnt exit", () => {
+        return request(app)
+          .delete("/api/comments/999")
+          .expect(404)
+          .then(({ body }) => {
+            expect(data.commentData.length === 18);
+            const { msg } = body;
+            expect(msg).toBe("Not found");
+
           });
       });
     });
