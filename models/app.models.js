@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 const { readFile } = require("node:fs/promises");
-const users = require("../db/data/test-data/users");
+const format = require("pg-format");
 
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
@@ -10,19 +10,19 @@ const fetchTopics = () => {
 
 const fetchEndPoints = () => {
   return readFile("endpoints.json", "utf-8").then((file) => {
-    return JSON.parse(file);
+    return file;
   });
 };
 
 const fetchArticleById = (id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = ${id}`)
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({ rows }) => {
-      const id = rows[0];
-      if (!id) {
+      const article = rows[0];
+      if (!article) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
-      return id;
+      return article;
     });
 };
 
@@ -45,20 +45,60 @@ const fetchCommentsByArticleID = (id) => {
       return rows;
     });
 };
-const fetchArticles = () => {
-  return db
-    .query(
-      `
-    SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
+const fetchArticles = ({
+  topic,
+  sort_by = "created_at",
+  order_by = "DESC",
+}) => {
+  const acceptedTopics = ["mitch", "cats", "paper"];
+  const acceptedOrderBy = ["DESC", "ASC"];
+  const acceptedSortBy = [
+    "date",
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+    "body",
+  ];
+
+  let baseStr = `
+  SELECT articles.*, COUNT(comments.article_id) AS comment_count 
+  FROM articles
+  LEFT JOIN comments 
+  ON comments.article_id = articles.article_id `;
+
+  if (!acceptedTopics.includes(topic) && topic !== undefined) {
+    return Promise.reject({ status: 404, msg: "Not found" });
+  } else if (acceptedTopics.includes(topic)) {
+    baseStr += `    
+    WHERE articles.topic = topic AND topic = '${topic}' `;
+  }
+
+  if (!acceptedSortBy.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  if (!acceptedOrderBy.includes(order_by.toUpperCase())) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  } else if (order_by) {
+    order_by = order_by.toUpperCase();
+  }
+
+  baseStr += `    
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC
-  `
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+    ORDER BY articles.${sort_by} ${order_by}
+  `;
+
+  const formattedString = format(baseStr);
+
+
+  return db.query(formattedString).then(({ rows }) => {
+    return rows;
+  });
 };
+
 
 const updateArticle = (votes, id) => {
   const { inc_votes } = votes;
@@ -100,6 +140,7 @@ const putNewComment = (newComment, id) => {
       return rows[0];
     });
 };
+
 
 const fetchUsers = () => {
   return db

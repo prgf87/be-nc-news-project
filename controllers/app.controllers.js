@@ -10,7 +10,6 @@ const {
   fetchUsers,
 } = require("../models/app.models");
 
-
 const getTopics = (_, response, next) => {
   fetchTopics()
     .then((topics) => {
@@ -22,7 +21,7 @@ const getTopics = (_, response, next) => {
 const getEndPoints = (_, response, next) => {
   fetchEndPoints()
     .then((endpoints) => {
-      response.status(200).send(endpoints);
+      response.status(200).send({ endpoints: endpoints });
     })
     .catch(next);
 };
@@ -30,8 +29,8 @@ const getEndPoints = (_, response, next) => {
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
   fetchArticleById(article_id)
-    .then((data) => {
-      response.status(200).send({ article: data });
+    .then((article) => {
+      response.status(200).send({ article: article });
     })
     .catch(next);
 };
@@ -39,16 +38,19 @@ const getArticleById = (request, response, next) => {
 const getArticleComments = (request, response, next) => {
   const { article_id } = request.params;
   fetchCommentsByArticleID(article_id)
-    .then((data) => {
-      response.status(200).send({ comments: data });
+    .then((comments) => {
+      response.status(200).send({ comments: comments });
     })
     .catch(next);
 };
 
-const getArticles = (_, response, next) => {
-  fetchArticles()
+
+const getArticles = (request, response, next) => {
+  const { query } = request;
+  fetchArticles(query)
     .then((articles) => {
       response.status(200).send({ articles: articles });
+    })
     })
     .catch(next);
 };
