@@ -3,8 +3,6 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/");
-
-
 const endpointsFile = require("../endpoints.json");
 
 beforeEach(() => {
@@ -57,10 +55,16 @@ describe("app()", () => {
             });
           });
       });
+
+    });
+
+    describe("WRONG API PATH", () => {
+
       it("404: returns with a 404 error when making a request to an api that does not exist", () => {
         return request(app).get("/api/toothpicks").expect(404);
       });
     });
+
     describe("GET /api/articles", () => {
       it("200: should receive status 200", () => {
         return request(app).get("/api/articles").expect(200);
@@ -161,6 +165,27 @@ describe("app()", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("Not found");
+
+          });
+      });
+    });
+    describe("/api/users", () => {
+      it("200: should respond with a status of 200", () => {
+        return request(app).get("/api/users").expect(200);
+      });
+      it("200: should respond with a status of 200 and a list of all the users in the database", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body }) => {
+            const { users } = body;
+            expect(users.length).toBe(4);
+            users.forEach((user) => {
+              expect(user).toHaveProperty("username", expect.any(String));
+              expect(user).toHaveProperty("name", expect.any(String));
+              expect(user).toHaveProperty("avatar_url", expect.any(String));
+            });
+
           });
       });
     });
@@ -366,6 +391,7 @@ describe("app()", () => {
           .then(({ body }) => {
             expect(body.msg).toBe("Not found");
 
+
           });
       });
     });
@@ -398,6 +424,7 @@ describe("app()", () => {
             expect(data.commentData.length === 18);
             const { msg } = body;
             expect(msg).toBe("Not found");
+
 
           });
       });
