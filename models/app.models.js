@@ -45,30 +45,54 @@ const fetchCommentsByArticleID = (id) => {
       return rows;
     });
 };
-const fetchArticles = ({ topic }) => {
+const fetchArticles = (query) => {
+  const { topic, sort_by, order_by } = query;
   const acceptedTopics = ["mitch", "cats", "paper"];
-  console.log(topic);
+  const acceptedOrderBy = ["DESC", "ASC"];
+  const acceptedSortBy = [
+    "date",
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+    "body",
+  ];
+  let sortBy = "created_at";
+  let orderBy = "DESC";
 
-  let baseStr = "";
-
-  if (!acceptedTopics.includes(topic)) {
-    baseStr += `
+  let baseStr = `
   SELECT articles.*, COUNT(comments.article_id) AS comment_count 
   FROM articles
   LEFT JOIN comments 
   ON comments.article_id = articles.article_id `;
+
+  if (!acceptedTopics.includes(topic) && topic !== undefined) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  } else if (acceptedTopics.includes(topic)) {
+    baseStr += `    
+    WHERE articles.topic = topic AND topic = '${topic}' `;
   }
 
-  if (acceptedTopics.includes(topic)) {
-    baseStr += `WHERE articles.topic = topic AND topic = '${topic}' `;
+  if (!acceptedSortBy.includes(sortBy) && sort_by !== undefined) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  } else if (sort_by) {
+    sortBy = sort_by;
+  }
+
+  if (!acceptedOrderBy.includes(orderBy) && order_by !== undefined) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  } else if (order_by) {
+    orderBy = order_by.toUpperCase();
   }
 
   baseStr += `    
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC
+    ORDER BY articles.${sortBy} ${orderBy}
   `;
+
   return db.query(baseStr).then(({ rows }) => {
-    console.log(rows);
     return rows;
   });
 };

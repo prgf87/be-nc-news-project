@@ -49,14 +49,12 @@ const getArticleComments = (request, response, next) => {
 };
 
 const getArticles = (request, response, next) => {
-  console.log(request.query);
-  const query = request.query;
+  const { query } = request;
   fetchArticles(query)
     .then((articles) => {
       response.status(200).send({ articles: articles });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
