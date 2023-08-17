@@ -2,7 +2,8 @@ const app = require("../app");
 const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
-const data = require("../db/data/test-data/index");
+const data = require("../db/data/test-data/");
+
 
 const endpointsFile = require("../endpoints.json");
 
@@ -364,6 +365,7 @@ describe("app()", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("Not found");
+
           });
       });
     });
@@ -396,6 +398,7 @@ describe("app()", () => {
             expect(data.commentData.length === 18);
             const { msg } = body;
             expect(msg).toBe("Not found");
+
           });
       });
     });
