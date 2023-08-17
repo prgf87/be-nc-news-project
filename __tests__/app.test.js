@@ -25,16 +25,8 @@ describe("app()", () => {
           .get("/api")
           .expect(200)
           .then(({ body }) => {
-            expect(typeof body).toBe("object");
-            Object.values(body).forEach((object) => {
-              expect(object).toHaveProperty("description", expect.any(String));
-              expect(object).toHaveProperty("queries", expect.any(Array));
-              expect(object).toHaveProperty(
-                "exampleResponse",
-                expect.any(Object)
-              );
-            });
-            expect(body).toEqual(endpointsFile);
+            const { endpoints } = body;
+            expect(JSON.parse(endpoints)).toEqual(endpointsFile);
           });
       });
     });
@@ -408,13 +400,23 @@ describe("app()", () => {
             });
           });
       });
-      it("400: should return status 400 and msg of Bad request when passed an incorrect topic, ie: bananas", () => {
+      it("200: should return a status of 200 when passed a correct topic but no articles available", () => {
+        return request(app)
+          .get("/api/articles?topic=paper")
+          .expect(200)
+          .then(({ body }) => {
+            const { articles } = body;
+            expect(articles.length).toBe(0);
+            expect(articles).toEqual([]);
+          });
+      });
+      it("404: should return status 404 and msg of Not found when passed an incorrect topic, ie: bananas", () => {
         return request(app)
           .get("/api/articles?topic=bananas")
-          .expect(400)
+          .expect(404)
           .then(({ body }) => {
             const { msg } = body;
-            expect(msg).toBe("Bad request");
+            expect(msg).toBe("Not found");
           });
       });
       it("400: should return status 400 and msg of Bad request when passed an incorrect sort_by, ie: bananas", () => {

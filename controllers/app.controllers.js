@@ -21,7 +21,7 @@ const getTopics = (request, response, next) => {
 const getEndPoints = (request, response, next) => {
   fetchEndPoints()
     .then((endpoints) => {
-      response.status(200).send(endpoints);
+      response.status(200).send({ endpoints: endpoints });
     })
     .catch((err) => {
       next(err);
@@ -31,8 +31,8 @@ const getEndPoints = (request, response, next) => {
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
   fetchArticleById(article_id)
-    .then((data) => {
-      response.status(200).send({ article: data });
+    .then((article) => {
+      response.status(200).send({ article: article });
     })
     .catch((err) => {
       next(err);
@@ -42,8 +42,8 @@ const getArticleById = (request, response, next) => {
 const getArticleComments = (request, response, next) => {
   const { article_id } = request.params;
   fetchCommentsByArticleID(article_id)
-    .then((data) => {
-      response.status(200).send({ comments: data });
+    .then((comments) => {
+      response.status(200).send({ comments: comments });
     })
     .catch(next);
 };
@@ -55,6 +55,7 @@ const getArticles = (request, response, next) => {
       response.status(200).send({ articles: articles });
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 };
