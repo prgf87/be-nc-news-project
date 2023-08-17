@@ -5,6 +5,7 @@ const {
   getArticleById,
   postCommentByArticleId,
   getArticleComments,
+  deleteComment,
   patchArticle,
   getUsers,
 } = require("./controllers/app.controllers");
@@ -30,6 +31,9 @@ app.get("/api/users", getUsers);
 app.patch("/api/articles/:article_id", patchArticle);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.delete('/api/comments/:comment_id', deleteComment);
+
 
 app.use((_, res) => {
   res.status(404).send({ msg: "Not found" });
