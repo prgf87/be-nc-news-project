@@ -40,14 +40,17 @@ const getArticleComments = (request, response, next) => {
   fetchCommentsByArticleID(article_id)
     .then((comments) => {
       response.status(200).send({ comments });
-    })
+})
     .catch(next);
 };
 
-const getArticles = (_, response, next) => {
-  fetchArticles()
+
+const getArticles = (request, response, next) => {
+  const { query } = request;
+  fetchArticles(query)
     .then((articles) => {
       response.status(200).send({ articles });
+    })
     })
     .catch(next);
 };
