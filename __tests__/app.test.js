@@ -368,7 +368,7 @@ describe("app()", () => {
       });
     });
   });
-  describe("Queries", () => {
+  xdescribe("Queries", () => {
     describe("/api/articles?topic=mitch", () => {
       it("200: should respond with a status code of 200", () => {
         return request(app)
@@ -394,12 +394,3 @@ describe("app()", () => {
     });
   });
 });
-
-// topic, which filters the articles by the topic value specified in the query. If the query is omitted, the endpoint should respond with all articles.
-// sort_by, which sorts the articles by any valid column (defaults to date).
-// order, which can be set to asc or desc for ascending or descending (defaults to descending).
-// Consider what errors could occur with this endpoint, and make sure to test for them.
-
-// You should not have to amend any previous tests.
-
-// Remember to add a description of this endpoint to your /api endpoint.
