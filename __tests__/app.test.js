@@ -19,21 +19,13 @@ describe("app()", () => {
       it("200: responds with status 200", () => {
         return request(app).get("/api").expect(200);
       });
-      xit("200: should respond with a list of all available endpoints as a JSON object", () => {
+      it("200: should respond with a list of all available endpoints as a JSON object", () => {
         return request(app)
           .get("/api")
           .expect(200)
           .then(({ body }) => {
-            expect(typeof body).toBe("object");
-            Object.values(body).forEach((object) => {
-              expect(object).toHaveProperty("description", expect.any(String));
-              expect(object).toHaveProperty("queries", expect.any(Array));
-              expect(object).toHaveProperty(
-                "exampleResponse",
-                expect.any(Object)
-              );
-            });
-            expect(body).toEqual(endpointsFile);
+            const { endpoints } = body;
+            expect(JSON.parse(endpoints)).toEqual(endpointsFile);
           });
       });
     });
