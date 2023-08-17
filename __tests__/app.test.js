@@ -55,11 +55,9 @@ describe("app()", () => {
             });
           });
       });
-
     });
 
     describe("WRONG API PATH", () => {
-
       it("404: returns with a 404 error when making a request to an api that does not exist", () => {
         return request(app).get("/api/toothpicks").expect(404);
       });
@@ -119,6 +117,26 @@ describe("app()", () => {
             );
           });
       });
+      it("200: return with a status of 200 and the corresponding article 5 data, including the number of comments that article may have", () => {
+        return request(app)
+          .get("/api/articles/5")
+          .expect(200)
+          .then(({ body }) => {
+            const { article } = body;
+            expect(article).toHaveProperty("article_id", 5);
+            expect(article).toHaveProperty("comment_count", "2");
+            expect(article).toHaveProperty("author", expect.any(String));
+            expect(article).toHaveProperty("title", expect.any(String));
+            expect(article).toHaveProperty("body", expect.any(String));
+            expect(article).toHaveProperty("topic", expect.any(String));
+            expect(article).toHaveProperty("created_at", expect.any(String));
+            expect(article).toHaveProperty("votes", expect.any(Number));
+            expect(article).toHaveProperty(
+              "article_img_url",
+              expect.any(String)
+            );
+          });
+      });
       it("404: returns with a 404 error when making a request to an api that does not exist", () => {
         return request(app)
           .get("/api/toothpicks")
@@ -165,7 +183,6 @@ describe("app()", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("Not found");
-
           });
       });
     });
@@ -185,7 +202,6 @@ describe("app()", () => {
               expect(user).toHaveProperty("name", expect.any(String));
               expect(user).toHaveProperty("avatar_url", expect.any(String));
             });
-
           });
       });
     });
@@ -390,8 +406,6 @@ describe("app()", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("Not found");
-
-
           });
       });
     });
@@ -424,8 +438,6 @@ describe("app()", () => {
             expect(data.commentData.length === 18);
             const { msg } = body;
             expect(msg).toBe("Not found");
-
-
           });
       });
     });

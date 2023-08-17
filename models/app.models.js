@@ -16,13 +16,23 @@ const fetchEndPoints = () => {
 
 const fetchArticleById = (id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = ${id}`)
+    .query(
+      `
+      SELECT articles.*, COUNT(comments.article_id) AS comment_count 
+      FROM articles 
+      JOIN comments ON comments.article_id = articles.article_id
+      WHERE articles.article_id = ${id}
+      GROUP BY articles.article_id
+
+      `
+    )
     .then(({ rows }) => {
-      const id = rows[0];
-      if (!id) {
+      const article = rows[0];
+      if (!article) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
-      return id;
+      console.log(article);
+      return article;
     });
 };
 
@@ -101,7 +111,6 @@ const putNewComment = (newComment, id) => {
     });
 };
 
-
 const fetchUsers = () => {
   return db
     .query(
@@ -110,7 +119,8 @@ const fetchUsers = () => {
     )
     .then(({ rows }) => {
       return rows;
-
+    });
+};
 const removeComment = (comment_id) => {
   return db
     .query(
@@ -138,5 +148,4 @@ module.exports = {
   putNewComment,
   fetchUsers,
   removeComment,
-
 };

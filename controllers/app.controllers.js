@@ -10,7 +10,6 @@ const {
   fetchUsers,
 } = require("../models/app.models");
 
-
 const getTopics = (_, response, next) => {
   fetchTopics()
     .then((topics) => {
@@ -30,8 +29,8 @@ const getEndPoints = (_, response, next) => {
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
   fetchArticleById(article_id)
-    .then((data) => {
-      response.status(200).send({ article: data });
+    .then((article) => {
+      response.status(200).send({ article: article });
     })
     .catch(next);
 };
