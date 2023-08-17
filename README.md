@@ -20,4 +20,20 @@ You will also have to create two .env files(.env.test & .env.development), one f
 .env.test example:
 `PGDATABASE=nc_news_test`
 
+The database that you will be interacting with will use the data inside the db folder and husky and other tests will make sure your app is fully functional.
+
+Make sure you read through the files and data to introduce yourself to the project and understand the relationships between our data tables in psql.
+
+Run the scripts included in the package.json to get up and running, in the following order:
+
+`npm run setup-dbs`
+
+`npm run seed`
+
+`npm run prepare`
+
+`npm test`
+
+Once you are happy that everything is setup correctly and all tests are passing, you can now seed the online database by changing the `.env.production` file to your own `DATABASE_URL` and run the server by using the command `npm run start`.
+
 Thank you and good luck!

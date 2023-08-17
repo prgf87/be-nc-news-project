@@ -21,7 +21,7 @@ const getTopics = (_, response, next) => {
 const getEndPoints = (_, response, next) => {
   fetchEndPoints()
     .then((endpoints) => {
-      response.status(200).send({ endpoints: endpoints });
+      response.status(200).send({ endpoints });
     })
     .catch(next);
 };
@@ -30,7 +30,7 @@ const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
   fetchArticleById(article_id)
     .then((article) => {
-      response.status(200).send({ article: article });
+      response.status(200).send({ article });
     })
     .catch(next);
 };
@@ -39,8 +39,8 @@ const getArticleComments = (request, response, next) => {
   const { article_id } = request.params;
   fetchCommentsByArticleID(article_id)
     .then((comments) => {
-      response.status(200).send({ comments: comments });
-    })
+      response.status(200).send({ comments });
+})
     .catch(next);
 };
 
@@ -49,7 +49,7 @@ const getArticles = (request, response, next) => {
   const { query } = request;
   fetchArticles(query)
     .then((articles) => {
-      response.status(200).send({ articles: articles });
+      response.status(200).send({ articles });
     })
     })
     .catch(next);
@@ -58,7 +58,7 @@ const getArticles = (request, response, next) => {
 const getUsers = (_, response, next) => {
   fetchUsers()
     .then((users) => {
-      response.status(200).send({ users: users });
+      response.status(200).send({ users });
     })
     .catch(next);
 };
@@ -68,7 +68,7 @@ const postCommentByArticleId = (request, response, next) => {
   const newComment = request.body;
   putNewComment(newComment, article_id)
     .then((comment) => {
-      response.status(201).send({ comment: comment });
+      response.status(201).send({ comment });
     })
     .catch(next);
 };
@@ -87,7 +87,7 @@ const patchArticle = (request, response, next) => {
   const newVote = response.req.body;
   updateArticle(newVote, article_id)
     .then((article) => {
-      response.status(200).send({ article: article });
+      response.status(200).send({ article });
     })
     .catch(next);
 };
