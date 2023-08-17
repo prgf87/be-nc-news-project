@@ -171,7 +171,7 @@ describe("app()", () => {
       it("200: should respond with a status of 200", () => {
         return request(app).get("/api/users").expect(200);
       });
-      xit("200: should respond with a status of 200 and a list of all the users in the database", () => {
+      it("200: should respond with a status of 200 and a list of all the users in the database", () => {
         return request(app)
           .get("/api/users")
           .expect(200)
