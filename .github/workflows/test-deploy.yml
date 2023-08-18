@@ -7,9 +7,9 @@ jobs:
     Test & Deploy:
         runs-on: ubuntu-latest
         steps:
-            -name: checkout and clone repo
+            - name: checkout and clone repo
             uses: actions/checkout@v3
-            -name: install dependencies
+            - name: install dependencies
             run: npm i
-            -name: run utils-test
+            - name: run utils-test
             run: npm run utils-test
