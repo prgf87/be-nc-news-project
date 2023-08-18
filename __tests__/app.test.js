@@ -187,7 +187,37 @@ describe("app()", () => {
           });
       });
     });
+    describe("/api/users/:username", () => {
+      it("200: should respond with a status 200 when looking for the user rogersop", () => {
+        return request(app).get("/api/users/rogersop").expect(200);
+      });
+      it("200: should respond with a status 200 and a body of users with the correct data for the user rogersop", () => {
+        return request(app)
+          .get("/api/users/rogersop")
+          .expect(200)
+          .then(({ body }) => {
+            const { user } = body;
+            expect(typeof user).toBe("object");
+            expect(user).toHaveProperty("username", "rogersop");
+            expect(user).toHaveProperty(
+              "avatar_url",
+              "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+            );
+            expect(user).toHaveProperty("name", "paul");
+          });
+      });
+      it("404: should respond with a status 404 and a msg of Not found for a user search that does not exist", () => {
+        return request(app)
+          .get("/api/users/9999")
+          .expect(404)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Not found");
+          });
+      });
+    });
   });
+
   describe("PATCH", () => {
     describe("/api/articles/:article_id", () => {
       it("200: should respond with a status of 200 and update the value of votes accordingly", () => {
