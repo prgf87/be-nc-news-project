@@ -317,6 +317,11 @@ describe("app()", () => {
           });
       });
     });
+    describe("/api/commnents/:comment_id", () => {
+      it("200: should respond with a status of 200 and update the value of votes accordingly", () => {
+        //
+      });
+    });
   });
   describe("POST", () => {
     describe("/api/articles/:article_id/comments", () => {

@@ -79,6 +79,10 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
+const patchComment = () => {
+  console.log("here I am!");
+};
+
 const deleteComment = (request, response, next) => {
   const { comment_id } = request.params;
   removeComment(comment_id)
@@ -109,4 +113,6 @@ module.exports = {
   patchArticle,
   getUsers,
   getUserByUsername,
+  patchComment,
+
 };
