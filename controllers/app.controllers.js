@@ -1,3 +1,4 @@
+const { response } = require("../app");
 const endpoints = require("../endpoints.json");
 
 const {
@@ -9,6 +10,7 @@ const {
   putNewComment,
   removeComment,
   fetchUsers,
+  fetchUserByUsername,
 } = require("../models/app.models");
 
 const getTopics = (_, response, next) => {
@@ -58,6 +60,15 @@ const getUsers = (_, response, next) => {
     .catch(next);
 };
 
+const getUserByUsername = (request, response, next) => {
+  const { username } = request.params;
+  fetchUserByUsername(username)
+    .then((user) => {
+      response.status(200).send({ user });
+    })
+    .catch(next);
+};
+
 const postCommentByArticleId = (request, response, next) => {
   const { article_id } = request.params;
   const newComment = request.body;
@@ -97,4 +108,5 @@ module.exports = {
   deleteComment,
   patchArticle,
   getUsers,
+  getUserByUsername,
 };
