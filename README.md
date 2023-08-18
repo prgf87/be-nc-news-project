@@ -1,5 +1,7 @@
 # Northcoders News API
 
+Currently running on `NODE 18.17.1` & `PSQL 14`
+
 Welcome to my Northcoders Backend Project!
 
 To follow along with me, you will need to do a few things before getting started.
@@ -34,6 +36,6 @@ Run the scripts included in the package.json to get up and running, in the follo
 
 `npm test`
 
-Once you are happy that everything is setup correctly and all tests are passing, you can now seed the online database by changing the `.env.production` file to your own `DATABASE_URL` and run the server by using the command `npm run start`.
+Once you are happy that everything is setup correctly and all tests are passing, you can now seed the online database by changing the `.env.production` file to your own `DATABASE_URL` and host the seed to your databse by using the command `npm run seed-prod`.
 
-Thank you and good luck!
+Thank you for following along with me and have fun!
