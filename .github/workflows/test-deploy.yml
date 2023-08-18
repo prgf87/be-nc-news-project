@@ -1,8 +1,7 @@
 name: NC News CICD
 on: [push]
 jobs:
-  Test And Deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clones the repo
-        uses: actions/checkout@v3
+  runs-on: ubuntu-latest
+  steps:
+    - name: Clones the repo
+      uses: actions/checkout@v3
