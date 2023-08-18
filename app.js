@@ -1,41 +1,18 @@
-const {
-  getTopics,
-  getEndPoints,
-  getArticles,
-  getArticleById,
-  postCommentByArticleId,
-  getArticleComments,
-  deleteComment,
-  patchArticle,
-  getUsers,
-} = require("./controllers/app.controllers");
-
 const express = require("express");
-
 const app = express();
+
+const apiRouter = require("./routes/api-router");
 
 app.use(express.json());
 
-app.get("/api", getEndPoints);
-
-app.get("/api/topics", getTopics);
-
-app.get("/api/articles", getArticles);
-
-app.get("/api/articles/:article_id", getArticleById);
-
-app.get("/api/articles/:article_id/comments", getArticleComments);
-
-app.get("/api/users", getUsers);
-
-app.post("/api/articles/:article_id/comments", postCommentByArticleId);
-
-app.patch("/api/articles/:article_id", patchArticle);
-
-app.delete("/api/comments/:comment_id", deleteComment);
+app.use("/api", apiRouter);
 
 app.use((_, res) => {
   res.status(404).send({ msg: "Not found" });
+});
+
+app.use((_, res) => {
+  res.status(400).send({ msg: "Bad request" });
 });
 
 app.use((err, request, response, next) => {
