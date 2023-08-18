@@ -1,9 +1,7 @@
-const pg = require("pg");
-//or native libpq bindings
-//var pg = require('pg').native
+var pg = require("pg");
 
-const conString = process.env.DATABASE_URL;
-const client = new pg.Client(conString);
+var conString = process.env.DATABASE_URL;
+var client = new pg.Client(conString);
 client.connect(function (err) {
   if (err) {
     return console.error("could not connect to postgres", err);

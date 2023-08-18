@@ -492,7 +492,7 @@ describe("app()", () => {
             expect(msg).toBe("Bad request");
           });
       });
-      it("400: should respond with a status code of 400 when searching for mitch as a topic, using sortby article_id, but the incorrect order_by, ie bananas in ascending order", () => {
+      it("400: should respond with a status code of 400 when searching for mitch as a topic, using sort_by article_id, but the incorrect order_by, ie bananas", () => {
         return request(app)
           .get("/api/articles?topic=mitch&sort_by=article_id&order_by=bananas")
           .expect(400)
