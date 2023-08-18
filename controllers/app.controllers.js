@@ -11,6 +11,7 @@ const {
   removeComment,
   fetchUsers,
   fetchUserByUsername,
+  updateComment,
 } = require("../models/app.models");
 
 const getTopics = (_, response, next) => {
@@ -79,8 +80,14 @@ const postCommentByArticleId = (request, response, next) => {
     .catch(next);
 };
 
-const patchComment = () => {
-  console.log("here I am!");
+const patchComment = (request, response, next) => {
+  const { comment_id } = request.params;
+  const newVote = response.req.body;
+  updateComment(newVote, comment_id)
+    .then((comment) => {
+      response.status(200).send({ comment });
+    })
+    .catch(next);
 };
 
 const deleteComment = (request, response, next) => {
@@ -114,5 +121,4 @@ module.exports = {
   getUsers,
   getUserByUsername,
   patchComment,
-
 };

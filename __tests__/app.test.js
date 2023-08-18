@@ -319,7 +319,82 @@ describe("app()", () => {
     });
     describe("/api/commnents/:comment_id", () => {
       it("200: should respond with a status of 200 and update the value of votes accordingly", () => {
-        //
+        const newVote = { inc_votes: 1 };
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: newVote })
+          .expect(200)
+          .then(({ body }) => {
+            const { comment } = body;
+            expect(comment).toHaveProperty("comment_id", 1);
+            expect(comment).toHaveProperty("article_id", 9);
+            expect(comment).toHaveProperty("votes", 17);
+            expect(comment).toHaveProperty("author", "butter_bridge");
+            expect(comment).toHaveProperty("body", expect.any(String));
+            expect(comment).toHaveProperty("created_at", expect.any(String));
+          });
+      });
+      it("200: should respond with a status of 200 and update the value of votes accordingly", () => {
+        const newVote = { inc_votes: -1 };
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: newVote })
+          .expect(200)
+          .then(({ body }) => {
+            const { comment } = body;
+            expect(comment).toHaveProperty("comment_id", 1);
+            expect(comment).toHaveProperty("article_id", 9);
+            expect(comment).toHaveProperty("votes", 15);
+            expect(comment).toHaveProperty("author", "butter_bridge");
+            expect(comment).toHaveProperty("body", expect.any(String));
+            expect(comment).toHaveProperty("created_at", expect.any(String));
+          });
+      });
+      it("200: should respond with a status of 200 and update the value of votes accordingly even when passed additional information or a ridiculous value", () => {
+        const newVote = { inc_votes: -9999 };
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: newVote, data_mine: Function })
+          .expect(200)
+          .then(({ body }) => {
+            const { comment } = body;
+            expect(comment).toHaveProperty("comment_id", 1);
+            expect(comment).toHaveProperty("article_id", 9);
+            expect(comment).toHaveProperty("votes", 15);
+          });
+      });
+      it("404: should respond with a status of 404 and msg of Not found when passing an update to a non exitent comment", () => {
+        const newVote = { inc_votes: 1 };
+        return request(app)
+          .patch("/api/comments/999")
+          .send({ inc_votes: newVote })
+          .expect(404)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Not found");
+          });
+      });
+      it("400: should respond with a status of 400 and msg of Not found when passing an update to a non exitent comment by using the wrong data type", () => {
+        const newVote = { inc_votes: 1 };
+        return request(app)
+          .patch("/api/comments/hello")
+          .send({ inc_votes: newVote })
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad request");
+          });
+      });
+      it("400: should respond with a status of 400 and msg of Bad request when passing the wrong data type", () => {
+        const newVote = { inc_votes: "bananas" };
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: newVote })
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad request");
+          });
       });
     });
   });
