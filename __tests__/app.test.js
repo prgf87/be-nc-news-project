@@ -25,7 +25,7 @@ describe("app()", () => {
           .expect(200)
           .then(({ body }) => {
             const { endpoints } = body;
-            expect(JSON.parse(endpoints)).toEqual(endpointsFile);
+            expect(endpoints).toEqual(endpointsFile);
           });
       });
     });

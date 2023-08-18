@@ -1,16 +1,9 @@
 const db = require("../db/connection");
-const { readFile } = require("node:fs/promises");
 const format = require("pg-format");
 
 const fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows }) => {
     return rows;
-  });
-};
-
-const fetchEndPoints = () => {
-  return readFile("endpoints.json", "utf-8").then((file) => {
-    return file;
   });
 };
 
@@ -104,12 +97,10 @@ const fetchArticles = ({
 
   const formattedString = format(baseStr);
 
-
   return db.query(formattedString).then(({ rows }) => {
     return rows;
   });
 };
-
 
 const updateArticle = (votes, id) => {
   const { inc_votes } = votes;
@@ -178,11 +169,9 @@ const removeComment = (comment_id) => {
 };
 
 module.exports = {
-  fetchEndPoints,
   fetchArticleById,
   fetchCommentsByArticleID,
   fetchTopics,
-  fetchEndPoints,
   fetchArticles,
   fetchArticleById,
   updateArticle,

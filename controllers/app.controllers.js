@@ -1,6 +1,7 @@
+const endpoints = require("../endpoints.json");
+
 const {
   fetchTopics,
-  fetchEndPoints,
   fetchArticles,
   fetchArticleById,
   fetchCommentsByArticleID,
@@ -18,12 +19,8 @@ const getTopics = (_, response, next) => {
     .catch(next);
 };
 
-const getEndPoints = (_, response, next) => {
-  fetchEndPoints()
-    .then((endpoints) => {
-      response.status(200).send({ endpoints });
-    })
-    .catch(next);
+const getEndPoints = (_, response) => {
+  response.status(200).send({ endpoints });
 };
 
 const getArticleById = (request, response, next) => {
