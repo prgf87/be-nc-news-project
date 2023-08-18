@@ -1,6 +1,6 @@
 # Northcoders News API
 
-Currently running on `NODE 18.17.1` & `PSQL 14`
+Currently running on `NODE 18` & `PSQL 14`
 
 Welcome to my Northcoders Backend Project!
 
