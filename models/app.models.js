@@ -127,6 +127,62 @@ const updateArticle = (votes, id) => {
     });
 };
 
+const updateComment = (votes, id) => {
+  const {
+    inc_votes: { inc_votes },
+  } = votes;
+
+  if (typeof inc_votes !== "number") {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  if (inc_votes > 0) {
+    return db
+      .query(
+        `
+        UPDATE comments  
+        SET
+        votes = votes + 1
+        WHERE
+        comment_id = $1
+        RETURNING *;
+      `,
+        [id]
+      )
+      .then(({ rows }) => {
+        if (!rows.length) {
+          return Promise.reject({
+            status: 404,
+            msg: "Not found",
+          });
+        }
+        return rows[0];
+      });
+  } else {
+    return db
+      .query(
+        `
+        UPDATE comments  
+        SET
+        votes = votes - 1
+        WHERE
+        comment_id = $1
+        RETURNING *;
+      `,
+        [id]
+      )
+      .then(({ rows }) => {
+        if (!rows.length) {
+          return Promise.reject({
+            status: 404,
+            msg: "Not found",
+          });
+        }
+        return rows[0];
+      });
+  }
+};
+
 const putNewComment = (newComment, id) => {
   const { username, body } = newComment;
 
@@ -192,4 +248,5 @@ module.exports = {
   updateArticle,
   putNewComment,
   removeComment,
+  updateComment,
 };
