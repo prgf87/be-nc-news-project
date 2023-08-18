@@ -4,11 +4,13 @@ on:
         branches: 
             - main
 jobs:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout and clone repo
-    uses: actions/checkout@v3
-    - name: install dependencies
-    run: npm i
-    - name: run utils-test
-    run: npm run utils-test
+    test:
+        name: Test & Deploy
+        runs-on: ubuntu-latest
+        steps:
+        - name: checkout and clone repo
+        uses: actions/checkout@v3
+        - name: install dependencies
+        run: npm i
+        - name: run utils-test
+        run: npm run utils-test
