@@ -39,7 +39,7 @@ jobs:
           node-version: 18
 
       - name: Install dependecies
-        uses: npm ci
+        run: npm ci
 
       - name: Run live database tests
-        uses: NODE_ENV=production DATABASE_URL=${{secrets.DATABASE_URL}} npm test
+        run: NODE_ENV=production DATABASE_URL=${{secrets.DATABASE_URL}} npm test
