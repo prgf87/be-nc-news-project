@@ -1,5 +1,5 @@
 name: nc-news-workflow
-on: [push]
+on: [pull_request]
 jobs:
   test-deploy:
     name: test-deploy
