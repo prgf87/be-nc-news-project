@@ -35,8 +35,7 @@ const fetchCommentsByArticleID = (id) => {
     .query(
       `
     SELECT * FROM comments 
-    LEFT JOIN articles ON articles.article_id = comments.article_id
-    WHERE articles.article_id = $1
+    WHERE article_id = $1
     ORDER BY comments.created_at ASC
   `,
       [id]

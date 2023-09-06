@@ -36,6 +36,7 @@ const getArticleById = (request, response, next) => {
 };
 
 const getArticleComments = (request, response, next) => {
+  // response.status(318).send();
   const { article_id } = request.params;
   fetchCommentsByArticleID(article_id)
     .then((comments) => {
