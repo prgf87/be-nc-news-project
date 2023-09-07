@@ -53,7 +53,7 @@ const fetchArticles = ({
   sort_by = "created_at",
   order_by = "DESC",
 }) => {
-  const acceptedTopics = ["mitch", "cats", "paper"];
+  const acceptedTopics = ["coding", "cooking", "football"];
   const acceptedOrderBy = ["DESC", "ASC"];
   const acceptedSortBy = [
     "date",

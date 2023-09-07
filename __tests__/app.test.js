@@ -535,48 +535,48 @@ describe("app()", () => {
     });
   });
   describe("Queries", () => {
-    describe("/api/articles?topic=mitch", () => {
-      it("200: should respond with a status code of 200 when searching for mitch as a topic", () => {
+    describe("/api/articles?topic=coding", () => {
+      it("200: should respond with a status code of 200 when searching for coding as a topic", () => {
         return request(app)
-          .get("/api/articles?topic=mitch")
+          .get("/api/articles?topic=coding")
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
-            expect(articles.length).toBe(12);
+            expect(articles.length).toBe(0);
             articles.forEach((article) => {
-              expect(article).toHaveProperty("topic", "mitch");
+              expect(article).toHaveProperty("topic", "coding");
             });
           });
       });
-      it("200: should respond with a status code of 200 when searching for mitch as a topic and using sortby article_id in descending order", () => {
+      it("200: should respond with a status code of 200 when searching for coding as a topic and using sortby article_id in descending order", () => {
         return request(app)
-          .get("/api/articles?topic=mitch&sort_by=article_id")
+          .get("/api/articles?topic=coding&sort_by=article_id")
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
-            expect(articles.length).toBe(12);
+            expect(articles.length).toBe(0);
             expect(articles).toBeSortedBy("article_id", { descending: true });
             articles.forEach((article) => {
-              expect(article).toHaveProperty("topic", "mitch");
+              expect(article).toHaveProperty("topic", "coding");
             });
           });
       });
-      it("200: should respond with a status code of 200 when searching for mitch as a topic, using sortby article_id in ascending order", () => {
+      it("200: should respond with a status code of 200 when searching for coding as a topic, using sortby article_id in ascending order", () => {
         return request(app)
-          .get("/api/articles?topic=mitch&sort_by=article_id&order_by=asc")
+          .get("/api/articles?topic=coding&sort_by=article_id&order_by=asc")
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
-            expect(articles.length).toBe(12);
+            expect(articles.length).toBe(0);
             expect(articles).toBeSortedBy("article_id", { ascending: true });
             articles.forEach((article) => {
-              expect(article).toHaveProperty("topic", "mitch");
+              expect(article).toHaveProperty("topic", "coding");
             });
           });
       });
       it("200: should return a status of 200 when passed a correct topic but no articles available", () => {
         return request(app)
-          .get("/api/articles?topic=paper")
+          .get("/api/articles?topic=coding")
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
@@ -595,16 +595,16 @@ describe("app()", () => {
       });
       it("400: should return status 400 and msg of Bad request when passed an incorrect sort_by, ie: bananas", () => {
         return request(app)
-          .get("/api/articles?topic=mitch&sort_by=bananas")
+          .get("/api/articles?topic=coding&sort_by=bananas")
           .expect(400)
           .then(({ body }) => {
             const { msg } = body;
             expect(msg).toBe("Bad request");
           });
       });
-      it("400: should respond with a status code of 400 when searching for mitch as a topic, using sort_by article_id, but the incorrect order_by, ie bananas", () => {
+      it("400: should respond with a status code of 400 when searching for coding as a topic, using sort_by article_id, but the incorrect order_by, ie bananas", () => {
         return request(app)
-          .get("/api/articles?topic=mitch&sort_by=article_id&order_by=bananas")
+          .get("/api/articles?topic=coding&sort_by=article_id&order_by=bananas")
           .expect(400)
           .then(({ body }) => {
             const { msg } = body;
