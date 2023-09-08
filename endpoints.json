@@ -47,6 +47,15 @@
               ]
             }
           },
+          "GET /api/users/:username": {
+            "description": "serves a user object with the corresponding username",
+            "queries": [],
+            "exampleResponse": {
+              "username": "tickle122",
+              "name": "Tom Tickle",
+              "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+            }
+          },
           "GET /api/articles": {
             "description": "serves an array of all articles",
             "queries": ["author", "topic", "sort_by", "order"],
@@ -496,6 +505,15 @@
           "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
         }
       ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "serves a user object with the corresponding username",
+    "queries": [],
+    "exampleResponse": {
+      "username": "tickle122",
+      "name": "Tom Tickle",
+      "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
     }
   },
   "GET /api/topics": {

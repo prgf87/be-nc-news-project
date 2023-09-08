@@ -56,7 +56,6 @@ const fetchArticles = ({
   const acceptedTopics = ["coding", "cooking", "football"];
   const acceptedOrderBy = ["DESC", "ASC"];
   const acceptedSortBy = [
-    "date",
     "article_id",
     "title",
     "topic",
@@ -64,6 +63,7 @@ const fetchArticles = ({
     "created_at",
     "votes",
     "body",
+    "comment_count",
   ];
 
   let baseStr = `
