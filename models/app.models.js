@@ -91,7 +91,7 @@ const fetchArticles = ({
 
   baseStr += `    
     GROUP BY articles.article_id
-    ORDER BY articles.${sort_by} ${order_by}
+    ORDER BY ${sort_by} ${order_by}
   `;
 
   const formattedString = format(baseStr);
