@@ -36,6 +36,6 @@ Run the scripts included in the package.json to get up and running, in the follo
 
 `npm test`
 
-Once you are happy that everything is setup correctly and all tests are passing, you can now seed the online database by changing the `.env.production` file to your own `DATABASE_URL` and host the seed to your databse by using the command `npm run seed-prod`.
+Once you are happy that everything is setup correctly and all tests are passing, you can now seed the online database by changing the `.env.production` file to your own `DATABASE_URL` and host the seed to your databse by using the command `NODE_ENV=production npm run seed-prod`.
 
 Thank you for following along with me and have fun!
