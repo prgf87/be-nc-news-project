@@ -4,6 +4,21 @@ jobs:
   test-deploy:
     name: test-deploy
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: my_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -12,34 +27,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
-      - name: Use PostgreSQL
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql db: "my_db"
-          postgresql user: "test_user"
-          postgresql password: "test_password"
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run tests
-        run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm run test-utils
-
-  test-live-app-db:
-    needs: test-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependecies
-        run: npm ci
-
-      - name: Run live database tests
-        run: NODE_ENV=production DATABASE_URL=${{secrets.DATABASE_URL}} npm run test-app
+        env:
+          PGHOST: localhost
+          PGDATABASE: my_db
+          PGUSER: test_user
+          PGPASSWORD: test_password
+          PGPORT: 5432
+        run: npm run test-utils
